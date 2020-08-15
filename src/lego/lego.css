@@ -1,0 +1,600 @@
+
+
+.sayan {
+/*    width: 150px;
+    height: 150px;*/
+    /*background-color: #fff;*/
+
+    box-shadow: 0px 0px 40px 20px #0ff;
+    /* in order: x offset, y offset, blur size, spread size, color */
+    /* blur size and spread size are optional (they default to 0) */
+}
+.lego-stats-grid {
+
+  display: grid;
+  grid-column: 1 / span 2;
+  padding: 16px;
+   grid-template-columns: 1fr 1fr;
+  grid-column-gap: 16px;
+
+}
+
+
+.minifigure-wrapper {
+      grid-row: span 2;
+   
+    margin: auto;
+}
+
+  @media only screen and (min-width: 700px) and (min-height: 500px) {
+    .minifigure-wrapper {
+       transform: scale(1.5);
+    }
+
+    .lego-stats-grid {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      grid-column: span 1;
+      padding: 32px;
+      max-width: 400px;
+    }
+
+
+    .stat-wrapper {
+        font-size: 20px;
+    }
+  }  
+
+.stat-wrapper {
+ 
+  /*width: 174px;*/
+
+    display: flex;
+    justify-content: space-between;
+    /*margin: auto;*/
+}
+
+
+.textIn {
+    opacity: 1;
+    animation: zoomInDown .75s ease-in-out ;
+    animation-fill-mode: forwards;
+}
+
+.textOut {
+  animation: ;
+}
+
+@keyframes zoomInDown {
+  from {
+    opacity: 0;
+     transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+  }
+}
+
+.opacity-transition {
+  transition: opacity 600ms cubic-bezier(0,0,0,1.25);
+}
+
+.lego-page {
+
+    padding-top: 64px;
+
+}
+
+.lego-info-wrapper {
+display: grid;
+   /* grid-template-columns: repeat(auto-fit, minmax(164px, 238fr));*/
+    grid-template-columns: 1fr 1fr;
+}
+
+.new-character-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+
+
+
+
+.minifigure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 178px;
+    transition: transform 400ms cubic-bezier(0,0,0,1.25);
+    margin-bottom: -32px;
+}
+
+
+
+/* Head */
+
+.hairs  {
+  transition: transform 400ms ;
+}
+
+.head {
+ transition: transform 400ms cubic-bezier(0,0,0,1.25);
+  z-index: 3;
+position: relative;
+}
+
+
+.hair-wrap {
+  overflow: hidden;
+
+  width: 239px;
+  position: absolute;
+    transform: translate(-29%, -118%);
+  z-index: 1;
+}
+
+.hair-styles {
+  display:    flex;
+  transition: transform 400ms cubic-bezier(0,0,0,1.25);
+  height: 200px;
+}
+
+.hair-style {
+  position: relative;
+  flex: 1 0 100%;
+  filter: drop-shadow(0px 1px 1px black);
+}
+
+
+
+.faces-wrap {
+
+  overflow: hidden;
+  position: absolute;
+  top: 16px;
+  width: 100px;
+  filter:  brightness(78%);
+
+}
+
+
+
+.faces {
+  display: flex;
+  transition: transform 400ms cubic-bezier(0,0,0,1.25);
+}
+
+
+.face {
+  position: relative;
+  flex: 1 0 100%;
+      /*filter: brightness();*/
+}
+
+.bodies-wrap {
+
+  overflow: hidden;
+margin: -88px 0px -93px;
+  width: 295px;
+  top: 167px;
+  z-index: 1;
+}
+
+
+
+.bodies {
+  display: flex;
+  transition: transform 400ms ;
+  /*transition: transform 400ms cubic-bezier(0,0,0,1);*/
+  height: 224px;
+      margin-left: 6px;
+}
+
+
+.body {
+  position: relative;
+  flex: 1 0 100%;
+      /*filter: brightness(0.8);*/
+}
+
+.lower {
+ /*transition: transform 400ms cubic-bezier(0,0,0,1.5);*/
+}
+
+.legs-wrap {
+
+    overflow: hidden;
+/*transition: opacity 2s cubic-bezier(0,0,0,1.25);*/
+    width: 139px;
+    z-index: 0;
+}
+
+
+
+.legs {
+  display: flex;
+   transition: transform 400ms cubic-bezier(0,0,0,1.25);
+}
+
+
+.leg {
+  position: relative;
+  flex: 1 0 100%;
+  height: 200px;
+      /*filter: brightness(0.8);*/
+}
+
+/* Eyes */
+
+.eye {
+  position: absolute;
+  top: 2.25em;
+  width: 0.75em;
+  height: 0.9375em;
+  color: #fff;
+  background-color: currentColor;
+  border-radius: 50%;
+  box-shadow: inset 0 -0.125em 0 0.1em #000;
+}
+
+.eye::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  /*color: #000;*/
+  transform: translateX(-50%);
+}
+
+.eye.right {
+  left: 2.25em;
+}
+
+.eye.left {
+  right: 2.25em;
+}
+
+.classic .eye {
+  top: 2.4375em;
+  height: 0.75em;
+  color: #000;
+  box-shadow: none;
+}
+
+.large-smile .eye {
+  top: 2em;
+}
+
+.surprised .eye {
+  top: 2.4375em;
+  width: 1em;
+  height: 1.125em;
+  box-shadow: inset 0 -0.125em 0 0.125em #000;
+}
+
+
+
+.frown .eye {
+  top: 2.625em;
+}
+
+.frown .eye::before {
+  bottom: 80%;
+  width: 1.25em;
+  height: 1em;
+  border: 0.1875em solid transparent;
+  border-bottom-color: currentColor;
+  border-radius: 50%;
+}
+
+.frown .eye.right::before {
+  margin-left: -0.25em;
+  transform: translateX(-50%) rotate(-20deg);
+}
+
+.frown .eye.left::before {
+  margin-left: 0.25em;
+  transform: translateX(-50%) rotate(20deg);
+}
+
+
+/* Brow */
+
+.brow {
+  position: absolute;
+  bottom: 0.625em;
+  left: 50%;
+  width: 1.75em;
+  height: 1em;
+  transform-origin: 0 0;
+  transform: translateX(-50%);
+  color: #000;
+  border: 0.25em solid transparent;
+  border-top-color: currentColor;
+  border-bottom: none;
+  border-radius: 50% 50% 0 0;
+}
+
+.right .brow {
+  border-left: none;
+}
+
+.left .brow {
+  border-right: none;
+}
+
+.large-smile .brow {
+  bottom: 0.375em;
+  width: 1.25em;
+  height: 1.375em;
+  border: none;
+  border-top: 0.25em solid;
+  border-radius: 50% 50% 0 0;
+}
+
+.large-smile .right .brow {
+  margin-left: -0.125em;
+  transform: skewY(-10deg) translateX(-50%) translateZ(0);
+}
+
+.large-smile .left .brow {
+  margin-left: 0.125em;
+  transform: skewY(10deg) translateX(-50%) translateZ(0);
+}
+
+
+
+.frown .brow {
+  width: 1.5em;
+  bottom: 1.375em;
+  border-top: none;
+  border-bottom: 0.25em solid currentColor;
+  border-radius: 0 0 50% 50%;
+}
+
+.frown .right .brow {
+  margin-left: -0.625em;
+  transform: rotate(-35deg) translateX(-50%) translateZ(0);
+}
+
+.frown .left .brow {
+  margin-left: 0.625em;
+  transform: rotate(35deg) translateX(-50%) translateZ(0);
+}
+
+.surprised .brow {
+  bottom: 1em;
+  width: 1.5em;
+  border-right: none;
+  border-left: none;
+}
+
+.surprised .right .brow {
+  margin-left: -0.5em;
+  transform: rotate(-15deg) translateX(-50%) translateZ(0);
+}
+
+.surprised .left .brow {
+  margin-left: 0.5em;
+  transform: rotate(15deg) translateX(-50%) translateZ(0);
+}
+
+/* Mouth */
+
+.mouth {
+  position: absolute;
+  top: 3.125em;
+  left: 50%;
+  width: 2.5em;
+  height: 1.5em;
+  transform: translateX(-50%);
+  color: #000;
+  border: 0.25em solid transparent;
+  border-bottom-color: currentColor;
+  border-radius: 50%;
+}
+
+.mouth::before,
+.mouth::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.classic .mouth {
+  top: 2.9375em;
+}
+
+.large-smile .mouth {
+  top: 0.125em;
+  width: 3.125em;
+  height: 5em;
+  border: none;
+  border-bottom: 1.5em solid;
+  border-radius: 0 0 70% 70%/0 0 50% 50%;
+}
+
+.large-smile .mouth::before {
+  top: 1.6875em;
+  width: 4.25em;
+  height: 2em;
+  color: #000;
+  border: 0.1875em solid transparent;
+  border-bottom-color: currentColor;
+  border-radius: 0 0 50% 50%;
+  box-shadow: 0 0.9375em 0 -0.75em #fff;
+}
+
+.large-smile .mouth::after {
+  top: 4.4375em;
+  width: 1.25em;
+  height: 0.375em;
+  color: #c00;
+  background-color: currentColor;
+  border-radius: 70% 70% 70% 70%/50% 50% 100% 100%;
+}
+
+
+
+.frown .mouth {
+  top: 4.25em;
+  width: 2.75em;
+  height: 2em;
+  margin-left: -0.125em;
+  transform: translateX(-50%) rotate(-15deg) translateZ(0);
+  border-top-color: currentColor;
+  border-right: none;
+  border-bottom-color: transparent;
+  border-right-width: 0.5em;
+  border-radius: 50% 50% 0 0;
+}
+
+.frown .mouth::before {
+  top: 0.375em;
+  width: 0.75em;
+  height: 0.625em;
+  margin-left: 0.125em;
+  color: #000;
+  border: 0.125em solid transparent;
+  border-top-color: currentColor;
+  border-right: none;
+  border-radius: 50%;
+  border-radius: 50% 50% 0 0;
+}
+
+.surprised .mouth {
+  top: 4em;
+  width: 3.125em;
+  height: 1.625em;
+  background-color: currentColor;
+  border: none;
+  border-radius: 70% 70% 60% 60%/100% 100% 50% 50%;
+}
+
+.surprised .mouth::before,
+.surprised .mouth::after {
+  color: #fff;
+  background-color: currentColor;
+}
+
+.surprised .mouth::before {
+  top: 0.1875em;
+  width: 2em;
+  height: 0.375em;
+  border-radius: 70% 70% 60% 60%/100% 100% 50% 50%;
+}
+
+.surprised .mouth::after {
+  bottom: 0.1875em;
+  width: 2.25em;
+  height: 0.375em;
+  border-radius: 70% 70% 60% 60%/100% 100% 50% 50%;
+}
+
+
+
+.btn:disabled {
+  background-color: lightgrey;
+}
+
+
+
+.controls {
+
+
+  width: 100%;
+  max-width: 400px;
+  /*padding: 8px;*/
+  color: #333;
+  text-transform: uppercase;
+  background-color: rgba(220,220,220,0.5);
+}
+
+.controls .title {
+  margin-bottom: 0.5rem;
+  font-weight: 900;
+  font-size: 1.25em;
+  letter-spacing: 0.03125em;
+}
+
+.button {
+  width: 100%;
+  padding: 0.5em 1em;
+  margin: 0.25rem 0;
+  color: #666;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.0625em;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.5em;
+  cursor: pointer;
+  outline: none;
+}
+
+.button:hover {
+  color: #000;
+  border-color: #ccc;
+}
+
+.button:active {
+  background-color: #ddd;
+}
+
+.controls fieldset {
+  border: none;
+  margin: 1rem 0;
+}
+
+
+.controls label {
+  display: block;
+  font-size: x-small;
+  letter-spacing: 0.0625em;
+}
+
+.controls input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
+  position: relative;
+  width: 100%;
+  height: 2em;
+  padding: 0.375em;
+  margin: 0.25rem 0 1rem;
+  color: inherit;
+  background-color: currentColor;
+  border-radius: 1em;
+  outline: none;
+}
+
+.controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  position: relative;
+  z-index: 10;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: green;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls input[type="range"]::-moz-range-thumb {
+  position: relative;
+  z-index: 10;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: #333;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls input[type="range"]::-moz-range-track {
+  background-color: transparent;
+}

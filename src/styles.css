@@ -1,121 +1,80 @@
 
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #fcfcfc;
   margin: 0;
 }
 
-.header {
-  height: 64px;
-  background-color: green;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 16px;
-
-
-}
-
-
-.logout-btn {
-
-}
-
-
-
-
-.home section {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.home-icon {
-  fill: pink;
-}
-
-
-.chat-area {
-  padding: 20px;
-  height: calc(100vh - 160px);
-  overflow-y: scroll;
-}
-
-.chat-area .chat-bubble {
-  background-color: #bbdefb;
-  padding: 16px;
-  border-radius: 4px;
-  max-width: 300px;
-  word-wrap: break-word;
-}
-
-.chat-bubble .chat-time {
-  font-size: 12px;
-  color: #757575;
-  text-align: right;
-}
-
-.chat-area .chat-bubble.current-user {
-  margin-left: auto;
-  background-color: #a5d6a7;
-}
-
-#signup-content {
-  display: flex;
-  justify-content: center;
-  
-}
-
-.signup-form {
-  max-width: 800px;
-}
-
-.form-control {
-  width: calc(100% - 16px)
-}
-
-.form-control:focus {
-  box-shadow: none;
-}
-
-.btn-wrapper {
- display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(244px,244px));
+.app-shell-loading {
+  display:          flex;
+  justify-content:  center;
+  align-items:      center;
+  height:           256px;
 }
 
 .btn {
-    background-color: green;
-    text-decoration: none;
-    margin: 16px;
-    color: #FFF;
-    padding: 16px;
-    border-radius: 8px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-              0 1px 5px 0 rgba(0, 0, 0, 0.12),
-              0 3px 1px -2px rgba(0, 0, 0, 0.2);
-    border-color: transparent;
-}
-
-.btn-white {
-  background-color: white;
+  background-color: green;
   text-decoration: none;
-  color: green;
   margin: 16px;
-  padding: 16px;
+  color: #FFF;
+  padding: 12px;
+  min-width: 120px;
   border-radius: 8px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
               0 1px 5px 0 rgba(0, 0, 0, 0.12),
               0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  border-color: transparent;
 }
 
+.content {
+  padding:         64px 16px;
+  display:         flex;
+  justify-content: center;
+}
 
+.error-txt {
+  color: red;
+}
 
-.btn-submit {
-  background-color: #2e7d32;
-  color: white;
+/*Chat Page*/
+.chat-content {
+  padding-top: 64px;
+  max-width:   800px;
+  margin:      auto;
+}
+
+.chat-area {
+  padding:    20px;
+  height:     calc(100vh - 230px);
+  overflow-y: scroll;
+}
+
+.chat-area::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-bubble {
+  background-color: #bbdefb;
+  padding:          16px;
+  border-radius:    4px;
+  max-width:        250px;
+  word-wrap:        break-word;
+  display:          flex;
+  flex-direction:   column;
+}
+
+.chat-time {
+  font-size:  12px;
+  color:      #757575;
+  text-align: right;
+}
+
+.chat-bubble.current-user {
+  margin-left: auto;
+  background-color: #a5d6a7;
 }
 
 .send-btn-wrapper {
@@ -129,35 +88,58 @@ body {
 }
 
 .send-btn {
-   background-color: green;
-   color: white;
-  border-color: transparent;
-  margin-left:  32px;
+  background-color: green;
+  color:            white;
+  border-color:     transparent;
+  margin-left:      32px;
+}
+
+/*Sign up and Login*/
+.signup-form {
+  max-width: 600px;
+}
+
+.form-control {
+  width:  100%;
+  margin: 16px;
+  height: 32px;
+}
+
+.form-control {
+  width:  100%;
+  margin: 16px 0px;
+  height: 32px;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.btn-wrapper {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px, 200px));
+  justify-content:       space-between;
+}
+
+.login-btn-wrapper {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit,minmax(140px,140px));
+  justify-content:       space-between;
 }
 
 
 
-.hide {
-  opacity: 0;
-  transition: opacity .5s ease-out;
-  height: 0px;
-  margin: 0;
-  padding: 0;
-}
-
-.show {
-    opacity: 1;
-  transition: opacity 2s;
-}
-
-
-  @media screen and (min-width:768px) {
-    p {
-      font-size: 20px;
-    }
-
-    input, button {
-      font-size: 18px;
-    }
-
+@media screen and (min-width:768px) {
+  p {
+    font-size: 20px;
   }
+
+  input, button {
+    font-size: 18px;
+  }
+
+  .chat-bubble {
+    max-width: 350px;
+  }
+
+}

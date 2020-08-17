@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { signin, signInWithGoogle, signInWithGitHub } from "../helpers/auth";
-import { FcHome } from 'react-icons/fc';
+import { signin, signInWithGoogle, signInWithFacebook } from "../helpers/auth";
+
+
 export default class Login extends Component {
   constructor() {
     super();
@@ -13,18 +14,24 @@ export default class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.googleSignIn = this.googleSignIn.bind(this);
-    this.githubSignIn = this.githubSignIn.bind(this);
+    this.facebookSignIn = this.facebookSignIn.bind(this);
   }
 
+
+  componentDidMount() {
+    this.props.onHeaderTitle('Login');  
+  }
+
+  // for email and password inputs
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
+  // Handles firebase sign in with email and password
   async handleSubmit(event) {
     event.preventDefault();
-    console.log('state', this.state)
     this.setState({ error: "" });
     try {
       await signin(this.state.email, this.state.password);
@@ -33,6 +40,7 @@ export default class Login extends Component {
     }
   }
 
+  // Handles firebase sign in with Google
   async googleSignIn() {
     try {
       await signInWithGoogle();
@@ -40,10 +48,11 @@ export default class Login extends Component {
       this.setState({ error: error.message });
     }
   }
-
-  async githubSignIn() {
+  
+  // Handles firebase sign in with Facebook
+  async facebookSignIn() {
     try {
-      await signInWithGitHub();
+      await signInWithFacebook();
     } catch (error) {
       this.setState({ error: error.message });
     }
@@ -51,55 +60,50 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className="container">
-        <form
-          className="mt-5 py-5 px-5"
-          autoComplete="off"
-          onSubmit={this.handleSubmit}
-        >
-         <nav className="header">
-        <Link className="navbar-brand" to="/"><FcHome size={32}/></Link>
-      </nav>
-          <p className="lead">
+      
+      <div className="content">
+        <form autoComplete="off"
+              onSubmit={this.handleSubmit}>
+
+          <p>
             Fill in the form below to login to your account.
           </p>
-          <h4>testingChat@asdf.com</h4>
+          <h4>Email: testingChat@asdf.com</h4>
+          <h4>Password: password</h4>
+         
           <div className="form-group">
-            
             <input
               className="form-control"
               placeholder="Email"
               name="email"
               type="email"
               onChange={this.handleChange}
-              value={this.state.email}
-            />
+              value={this.state.email}/>
           </div>
-          <h4>password</h4>
+     
           <div className="form-group">
-         
             <input
               className="form-control"
               placeholder="Password"
               name="password"
               onChange={this.handleChange}
               value={this.state.password}
-              type="password"
-            />
+              type="password"/>
           </div>
+
           <div className="form-group">
-            {this.state.error ? (
-              <p className="text-danger">{this.state.error}</p>
-            ) : null}
-            <button className="btn btn-primary px-5" type="submit">Login</button>
+            {this.state.error ? (<p className="error-txt">{this.state.error}</p>) : null}
+            <button className="btn" type="submit">Login</button>
           </div>
           <p>You can also log in with any of these services</p>
-          <button className="btn btn-danger mr-2" type="button" onClick={this.googleSignIn}>
-            Sign in with Google
-          </button>
-          {/* <button className="btn btn-secondary" type="button" onClick={this.githubSignIn}> */}
-          {/*   Sign in with GitHub */}
-          {/* </button> */}
+          <div className="login-btn-wrapper">
+            <button className="btn" type="button" onClick={this.googleSignIn}>
+             Google
+            </button>
+            <button className="btn" type="button" onClick={this.facebookSignIn}>
+              FaceBook
+            </button>
+          </div>
           <hr />
           <p>
             Don't have an account? <Link to="/signup">Sign up</Link>

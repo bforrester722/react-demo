@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import Header from "../components/Header";
-import { auth } from "../firebase/firebase";
-import { db } from "../firebase/firebase";
+import { auth }   from "../firebase/firebase";
+import { db }     from "../firebase/firebase";
+import { logout } from "../helpers/auth";
 
 export default class Chat extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -19,17 +20,25 @@ export default class Chat extends Component {
     this.myRef = React.createRef();
   }
 
-  async componentDidMount() {
+  
 
+  // When ready get "chats" for firebase realtime data
+  // TODO isMounted might by wrong find right way to handle memory error
+  // changing toolbar title should be done outside of pages anyways
+  async componentDidMount() {
     this.setState({ readError: null, loadingChats: true });
     const chatArea = this.myRef.current;
+    // this._isMounted = true;
+    // if (this._isMounted) {
+    //   this.props.onHeaderTitle('Chat'); 
+    // }
     try {
-      db.ref("chats").on("value", snapshot => {
-        let chats = [];
+      db.ref('chats').on('value', snapshot => {
+        const chats = [];
         snapshot.forEach((snap) => {
           chats.push(snap.val());
         });
-        chats.sort(function (a, b) { return a.timestamp - b.timestamp })
+        chats.sort(function (a, b) { return a.timestamp - b.timestamp });
         this.setState({ chats });
         chatArea.scrollBy(0, chatArea.scrollHeight);
         this.setState({ loadingChats: false });
@@ -37,27 +46,27 @@ export default class Chat extends Component {
     } catch (error) {
       this.setState({ readError: error.message, loadingChats: false });
     }
+ 
   }
 
-  handleScroll() {
-    if (this.myRef.current.scrollTop < 32) {
-      window.scrollTo(0, 0);    
-    }
-   
-}
+  // componentWillUnmount() {
+  //   this._isMounted = false;
+  // }
 
+  // storing new chat text
   handleChange(event) {
     this.setState({
       content: event.target.value
     });
   }
 
+  // Saves sent chat to realtime database
   async handleSend(event) {
     event.preventDefault();
     this.setState({ writeError: null });
     const chatArea = this.myRef.current;
     try {
-      await db.ref("chats").push({
+      await db.ref('chats').push({
         content: this.state.content,
         timestamp: Date.now(),
         uid: this.state.user.uid
@@ -69,43 +78,50 @@ export default class Chat extends Component {
     }
   }
 
+
   formatTime(timestamp) {
     const d = new Date(timestamp);
     const time = `${d.getDate()}/${(d.getMonth()+1)}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
     return time;
   }
 
+  // Logs out when btn pushed
+  async handelLogout() {
+    try {
+      await logout();
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  }
+
 
 
   render() {
-    console.log(this.props)
-    return (
-      <div>
-  
 
-        <div className="chat-area" ref={this.myRef} onScroll={this.handleScroll.bind(this)}>
+    return (
+      <div className="chat-content">
+        <div className="chat-area" ref={this.myRef}>
           {/* loading indicator */}
-          {this.state.loadingChats ? <div className="spinner-border text-success" role="status">
-            <span className="sr-only">Loading...</span>
-          </div> : ""}
+          {this.state.loadingChats ? <div role="status">Loading...</div> : ''}
           {/* chat area */}
           {this.state.chats.map(chat => {
             return <p key={chat.timestamp} className={"chat-bubble " + (this.state.user.uid === chat.uid ? "current-user" : "")}>
               {chat.content}
               <br />
-              <span className="chat-time float-right">{this.formatTime(chat.timestamp)}</span>
+              <span className="chat-time">{this.formatTime(chat.timestamp)}</span>
             </p>
           })}
         </div>
         <div className="send-btn-wrapper">
           <form onSubmit={this.handleSend} className="text-and-send">
-            <textarea className="form-control" name="content" onChange={this.handleChange} value={this.state.content}></textarea>
-            {this.state.error ? <p className="text-danger">{this.state.error}</p> : null}
+            <textarea  name="content" onChange={this.handleChange} value={this.state.content}></textarea>
+            {this.state.error ? <p className="error-txt">{this.state.error}</p> : null}
             <button type="submit" className="send-btn">Send</button>
           </form>
         </div>
-        <div className="py-5 mx-3">
-          Login in as: <strong className="text-info">{this.state.user.email}</strong>
+        <div>
+          Logged in as: <strong>{this.state.user.email}</strong>
+          <button className="btn" type="button" onClick={this.handelLogout}>Logout</button>
         </div>
       </div>
     );

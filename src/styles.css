@@ -30,14 +30,20 @@ body {
 }
 
 .content {
-  padding:         64px 16px;
-  display:         flex;
-  justify-content: center;
+  padding:      64px 16px;
+  margin:       auto;
+  max-width:    600px;
 }
 
 .error-txt {
   color: red;
 }
+
+.home-page {
+  max-width:   800px;
+  padding:     16px;
+}
+
 
 /*Chat Page*/
 .chat-content {
@@ -130,7 +136,7 @@ body {
 
 
 @media screen and (min-width:768px) {
-  p {
+  p, li {
     font-size: 20px;
   }
 

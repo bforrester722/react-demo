@@ -68,6 +68,9 @@ export default class Login extends Component {
           <p>
             Fill in the form below to login to your account.
           </p>
+          <div style={{fontWeight: 'Bold'}}>*Explainer Text*</div>
+          <div>You can absolutly sign up with email, Google, or Facebook by using sign up link at bottom of page. I figured you wouldn't want to though so I provide this to login with. </div>
+          <div>If you want to chat with someone they can use testingChat2@asdf.com and password.</div>
           <h4>Email: testingChat@asdf.com</h4>
           <h4>Password: password</h4>
          

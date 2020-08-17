@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import {wait} from '../helpers/utils';
-import Hair from './Hair.js'
-import Face from './Face.js'
-import Body from './Body.js'
-import Legs from './Legs.js'
 import vader from './vader.mp3'
 import './lego.css';
 import './faces.css';
+
+const Hair = lazy(() => import('./Hair'));
+const Face = lazy(() => import('./Face'));
+const Body = lazy(() => import('./Body'));
+const Legs = lazy(() => import('./Legs'));
+
+const renderLoader = () => <p>Loading</p>;
 
 export default class Lego extends Component {
   
@@ -264,7 +267,7 @@ export default class Lego extends Component {
 
 
     return (
-   
+   <Suspense fallback={renderLoader()}>
       <div className="lego-page">
         <div className="lego-info-wrapper">
           <div className="minifigure-wrapper">
@@ -359,6 +362,8 @@ export default class Lego extends Component {
         </div>
    
       </div>
+
+      </Suspense>
     )
   }
 }

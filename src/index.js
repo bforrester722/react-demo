@@ -4,11 +4,10 @@ import './styles.css';
 
 import App from './App';
 
-const title = 'My Minimal React Webpack Babel Setup';
 
 ReactDOM.render(
-  <App title={title} />,
+  <App  />,
   document.getElementById('app')
 );
 
-module.hot.accept();
+// module.hot.accept();

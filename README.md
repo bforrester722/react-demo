@@ -7,61 +7,70 @@ Overall, this will be a work in progress while I am honing my skills.
 Unused components are there for my reference. 
 
 
+## AppShell (Currently Focus)
 
-#AppShell (Currently Focus)
-
-Overall reusable component that handles routing, drawer, and app header
-
-
-##AppShell To Do
-
-Be able to pass in pages (works but need to import dynamically) and styling  
-
-~~Getting kind of big, pull apart and make AppToolbar Component~~
-
-Figure out isMounted (memory leak)
+- Overall reusable component that handles routing, drawer, and app header
 
 
+### AppShell To Do
 
-#Lego 
+- Be able to pass in pages (works but need to import dynamically) and styling  
 
-Showcases working with API, Data, CSS, and Adobe Illustrator
+- ~~Getting kind of big, pull apart and make AppToolbar Component~~
 
-Fetches a random Star Wars character from https://swapi.dev/ 
-
-Uses data to color hair, eyes, and skin of minifigure
-
-Height data sets scale
-
-Hair set to bald if need to 
-
-Handles receiving 404 from API
-
-
-##Lego To Do (in "free time")
-
-Overall, I feel it gets the point across
-
-Need to streamline translateCharOptions and updateCharacter functions
-
-SVGs need to be tweaked to clean-up CSS and make this section more responsive
-
-Clean up CSS
-
-componentDidMount running when drawer open?
+- Figure out isMounted (memory leak)
 
 
 
-#Chat (Work in Progress focused on AppShell)
+## Lego 
 
-Showcases working Firebase Login and Firebase Realtime Database
+- Showcases working with API, Data, CSS, and Adobe Illustrator
+
+- Fetches a random Star Wars character from https://swapi.dev/ 
+ 
+- Uses data to color hair, eyes, and skin of minifigure
+ 
+- Height data sets scale
+ 
+- Hair set to bald if need to 
+ 
+- Handles receiving 404 from API
 
 
-##Chat to Do (Lots)
+### Lego To Do (in "free time")
 
-Need to make it look pretty 
+- Overall, I feel it gets the point across
+ 
+- Need to streamline translateCharOptions and updateCharacter functions
+ 
+- SVGs need to be tweaked to clean-up CSS and make this section more responsive
+ 
+- Clean up CSS
+ 
+- componentDidMount running when drawer open?
 
-Be able to have separate Chats with different users
 
-Be able to notify me if someone starts a Chat
 
+## Chat (Work in Progress focused on AppShell)
+
+- Showcases working Firebase Login and Firebase Realtime Database
+
+
+### Chat to Do (Lots)
+
+- Need to make it look pretty 
+
+- Be able to have separate Chats with different users
+
+- Be able to notify me if someone starts a Chat
+
+
+## Known Issues
+
+- Webpack build not working correctly
+
+- Switch to lazy importing like Lego.js
+
+- Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
+
+- Service Worker

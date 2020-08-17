@@ -7,9 +7,10 @@ export default class Hair extends Component {
 
 	render() {
 
-		const {hairColor, eyeColor} = this.props
-		const fillColor 	 = hairColor instanceof Object ? hairColor.color1 : hairColor;
-
+		const {hairColor, eyeColor, skinColor} = this.props
+		const fillColor 	  = hairColor instanceof Object ? hairColor.color1 : hairColor;
+		const skinFillColor = skinColor instanceof Object ? skinColor.color1 : skinColor;
+		
 		return (
 			<div className="hair-wrap " >
 
@@ -34,7 +35,7 @@ export default class Hair extends Component {
 		      </svg>
 
 		      <svg id="yoda" className="hair-style" xmlns="http://www.w3.org/2000/svg" >
-						<style>{`.ear{fill:${this.props.skinColor};}.light{fill: #fff; fill-opacity:.4}.wrinkle{fill: #000; fill-opacity:.4}}`}</style>
+						<style>{`.ear{fill:${skinFillColor};}.light{fill: #fff; fill-opacity:.4}.wrinkle{fill: #000; fill-opacity:.4}}`}</style>
 						<path className="ear" d="M68.9,119,6.46,100.13a3.5,3.5,0,0,0-3.91,5.23c1.56,2.47,3.28,5,5.19,7.48,16.34,21.49,37.57,32,50.94,37.16h9.4Z"/>
 						<path className="light" d="M10.57,111.18,55,144.78A1.68,1.68,0,0,0,57.67,143a35.45,35.45,0,0,0-4.55-10.9,36.08,36.08,0,0,0-17.63-14.28L11.34,109.7A.85.85,0,0,0,10.57,111.18Z"/>
 						<path className="ear" d="M169,119l62.44-18.85a3.5,3.5,0,0,1,3.9,5.23q-2.33,3.7-5.18,7.48c-16.34,21.49-37.58,32-50.94,37.16h-9.4Z"/>

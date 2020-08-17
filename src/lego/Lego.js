@@ -6,6 +6,7 @@ import Body from './Body.js'
 import Legs from './Legs.js'
 import vader from './vader.mp3'
 import './lego.css';
+import './faces.css';
 
 export default class Lego extends Component {
   
@@ -50,9 +51,8 @@ export default class Lego extends Component {
   // fetch random starwars char when ready
   componentDidMount() {
     this._isMounted = true;
-
-      this.fetchRandomCharacter('first');
-
+    this.props.onHeaderTitle('Lego');  
+    this.fetchRandomCharacter();
   }
 
   componentWillUnmount() {
@@ -61,7 +61,6 @@ export default class Lego extends Component {
 
   // gets new random character when btn clicked
   async handleRandCharClick() {
-
     await this.setState({
       body:       0,
       character:  {name: "...Loading"},
@@ -71,23 +70,64 @@ export default class Lego extends Component {
       opacity:    '.5',
       textIn:     false
     })
-    this.translateCharOptions('hair-styles', 'hair');
-    this.translateCharOptions('faces', 'face');
-    this.translateCharOptions('bodies', 'body');
-    this.translateCharOptions('legs', 'leg');
+    this.translateCharOptions();
+
     this.fetchRandomCharacter();
   }
 
   // fetch character from swapi.dev/api
-  fetchRandomCharacter(first) {
+  fetchRandomCharacter() {
     // 82
     const rand = this.getRandomNum(1, 85);
     fetch(`https://swapi.dev/api/people/${rand}/`)
         .then(response => response.json())
         .then(data => {
-          this.updateCharacter(data, first)
+          this.updateCharacter(data)
         })
   }
+
+
+  // updates character and runs animation to new values
+  async updateCharacter(char) {
+    await wait(1000)
+    if (this._isMounted) {
+      if (char.name === 'Darth Vader') {
+        this.setVader(char);
+        return;
+      }
+      // if api return 404 show Goku
+      if (char.detail === 'Not found') {
+        this.setState({
+          body:       500,
+          character:  {
+            name: "Not Found ",
+            hair_color: 'blond',
+            skin_color: 'fair'
+          },
+          face:       500,
+          hair:       700,
+          leg:        500,
+          opacity:    '1',
+          textIn:     true
+        })
+      }
+      // sets random values for char
+      else {
+        const isBald = char.hair_color === 'none' || char.hair_color === 'n/a' ? true : false;
+        this.setState({
+          body:       this.getRandomNum(1, 4) * 100,
+          character:  char,
+          face:       this.getRandomNum(1, 5) * 100,
+          hair:       isBald ? 0 : this.getRandomNum(2, 6) * 100,
+          leg:        this.getRandomNum(1, 4) * 100,
+          opacity:    '1',
+          textIn:     true
+        })
+      }
+     this.translateCharOptions();
+    }
+  }
+
 
   setVader(char) {
     this.setState({
@@ -99,64 +139,32 @@ export default class Lego extends Component {
         opacity:    '1',
         textIn:     true
       })
-    this.translateCharOptions('hair-styles', 'hair');
-    this.translateCharOptions('faces', 'face');
-    this.translateCharOptions('bodies', 'body');
-    this.translateCharOptions('legs', 'leg');
+    this.translateCharOptions();
     const audio = new Audio(vader)
-    audio.volume = 0.1;
+    audio.volume = 0.2;
     audio.play()
- 
-  }
-
-  // updates character and runs animation to new values
-  async updateCharacter(char, first) {
-    await wait(1000)
-    if (this._isMounted) {
-    if (char.name === 'Darth Vader') {
-      this.setVader(char)
-      return
-    }
-    // if api return 404 show Goku
-    if (char.detail === 'Not found') {
-      this.setState({
-        body:       500,
-        character:  {
-          name: "Not Found ",
-          hair_color: 'blond',
-          skin_color: 'fair'
-        },
-        face:       500,
-        hair:       700,
-        leg:        500,
-        opacity:    '1',
-        textIn:     true
-      })
-    }
-    // sets random values for char
-    else {
-      const isBald = char.hair_color === 'none' || char.hair_color === 'n/a' ? true : false;
-      this.setState({
-        body:       this.getRandomNum(1, 4) * 100,
-        character:  char,
-        face:       this.getRandomNum(1, 5) * 100,
-        hair:       isBald ? 0 : this.getRandomNum(2, 6) * 100,
-        leg:        this.getRandomNum(1, 4) * 100,
-        opacity:    '1',
-        textIn:     true
-      })
-    }
-    this.translateCharOptions('hair-styles', 'hair');
-    this.translateCharOptions('faces', 'face');
-    this.translateCharOptions('bodies', 'body');
-    this.translateCharOptions('legs', 'leg');
-  }
   }
 
   // animates to random selected value
-  translateCharOptions(name, state) {
-    var feature = document.querySelector(`.${name}`);
-    feature.style.transform = 'translateX(-' + this.state[state] + '%)';
+  // translateCharOptions(name, state) {
+  //   var feature = document.querySelector(`.${name}`);
+  //   feature.style.transform = 'translateX(-' + this.state[state] + '%)';
+  // }
+
+
+  translateCharOptions() {
+    const featuresArray = [ 
+      {wrapper: 'hair-styles',  item: 'hair' },
+      {wrapper: 'faces',        item: 'face' },
+      {wrapper: 'bodies',       item: 'body' },
+      {wrapper: 'legs',         item: 'leg' }
+    ];
+
+    featuresArray.forEach(feature => {
+      const item = document.querySelector(`.${feature.wrapper}`);
+      item.style.transform = 'translateX(-' + this.state[feature.item] + '%)';
+    })
+
   }
 
   // sets feature based on slider
@@ -176,7 +184,7 @@ export default class Lego extends Component {
       this.setState({
         cachedFace: face.style.transform
       })
-      face.style.transform = `translateX(-700%)`;
+      face.style.transform = `translateX(-600%)`;
     }
     if (raise) {
       const raiseHead = document.querySelector(`.${raise}`);
@@ -202,7 +210,7 @@ export default class Lego extends Component {
 
   // checks if color is in colorCorrections array and returns color
   getCorrectedColor(color) {
-    const removeMottle = color.replace('mottle', '');
+    const removeMottle = color.replace('mottled', '').replace('mottle', '');
     const correctedColor = this.state.colorCorrections[removeMottle];
     return correctedColor ? correctedColor : removeMottle;
   }

@@ -6,6 +6,20 @@ Overall, this will be a work in progress while I am honing my skills.
 
 Unused components are there for my reference. 
 
+```
+## Known Issues
+
+- ~~Webpack build not working correctly
+
+- Switch to lazy importing like Lego.js
+
+-  ~~Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
+
+-  ~~Service Worker
+
+- Had to remove react-icons making bundle huge, need to make own drawer icons
+
+```
 
 ## AppShell (Currently Focus)
 
@@ -65,14 +79,3 @@ Unused components are there for my reference.
 - Be able to notify me if someone starts a Chat
 
 
-## Known Issues
-
-- ~~Webpack build not working correctly
-
-- Switch to lazy importing like Lego.js
-
--  ~~Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
-
--  ~~Service Worker
-
-- Had to remove react-icons making bundle huge, need to make own drawer icons

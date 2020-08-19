@@ -26,6 +26,7 @@ export default class Chat extends Component {
   // TODO isMounted might by wrong find right way to handle memory error
   // changing toolbar title should be done outside of pages anyways
   async componentDidMount() {
+    
     this.setState({ readError: null, loadingChats: true });
     const chatArea = this.myRef.current;
     // this._isMounted = true;

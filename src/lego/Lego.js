@@ -292,33 +292,37 @@ export default class Lego extends Component {
             <fieldset className="head-expression">
 
               <div className="form-element">
-                <label htmlFor="hair">Hair</label>
+                <label htmlFor="hair">Hair
                 <input onChange={(event) => this.setFeature(event, 'hair', 'hair-styles')} 
                        onTouchStart={(event) => this.animateFeature({raise: 'hairs'})} 
                        onTouchEnd={() => this.resetFeature({lower: 'hairs'})}
                        name="hair" type="range" min="0" max="600" step="100" value={hair}/>
+                </label>
               </div>
           
               <div className="form-element">
-                <label htmlFor="face">Face</label>
+                <label htmlFor="face">Face
                 <input onChange={(event) => this.setFeature(event, 'face', 'faces')}
                        name="face" type="range" min="0" max="400" step="100" value={face}/>
+                </label>
               </div>
           
               <div className="form-element">
-                <label htmlFor="body">Body</label>
+                <label htmlFor="body">Body
                 <input onChange={(event) => this.setFeature(event, 'body', 'bodies')}
                        onTouchStart={(event) => this.animateFeature({lower: 'lower', raise: 'head'})} 
                        onTouchEnd={() => this.resetFeature({lower: 'head', raise: 'lower'})}
                        name="body" type="range" min="100" max="400" step="100" value={body}/>
+                </label>
               </div>
        
               <div className="form-element">
-                <label htmlFor="legs">Legs</label>
+                <label htmlFor="legs">Legs
                 <input onChange={(event) => this.setFeature(event, 'leg', 'legs')} 
                        onTouchStart={() => this.animateFeature({lower: 'lower'})}
                        onTouchEnd={() => this.resetFeature({raise: 'lower'})}
                        name="legs" type="range" min="100" max="400" step="100" value={leg}/>
+                </label>
               </div>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 <button className="btn " type="button" disabled={character.name === "...Loading"} onClick={this.handleRandCharClick}>

@@ -49,7 +49,7 @@ export default class SignUp extends Component {
   // Handles firebase sign up with Facebook
   async facebookSignIn() {
     try {
-      await signInWithGitHub();
+      await signInWithFacebook();
     } catch (error) {
       console.log(error)
       this.setState({ error: error.message });

@@ -15,7 +15,7 @@ export default class HomePage extends Component {
           Since a lot of employers are looking for developers with React experience, I thought it best to start and learn it. 
           That is where this project comes in, made with React and Firebase. This is very much a work in progress I started a little over two weeks ago. 
           I will remedy issues as I continue to learn best practices. I also realize page is not very exciting to look at and will work on that too. 
-          All known issues I put on the README at <a target="_blank" href="https://github.com/bforrester722/react-demo">my github</a>. 
+          All known issues I put on the README at <a rel="noreferrer" target="_blank" href="https://github.com/bforrester722/react-demo">my github</a>. 
         </p>
 
         <p>Right now, there are two main sections Lego and Chat.</p>  

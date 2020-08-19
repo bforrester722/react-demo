@@ -91,17 +91,17 @@ class AppToolbar extends Component {
   	// for importing icons
   	// TODO find away to do this dynamically 
   	const pathsToIcons = {
-			'fa': require('react-icons/fa'),
-			'fc': require('react-icons/fc')
+			// 'fa': require('react-icons/fa'),
+			// 'fc': require('react-icons/fc')
 		}
 
 		// creates icons for drawer can take in size and color
 		const createIconAsync =  ( icon ) => {
-			const {color, name, path, size} = icon;
-			const imported = pathsToIcons[path];
-			if (!imported) { return; }
-			const createdIcon = React.createElement(imported[name]);
-			return ( <div style={{ fontSize: size, color: color }}>{createdIcon}</div> );
+			// const {color, name, path, size} = icon;
+			// const imported = pathsToIcons[path];
+			// if (!imported) { return; }
+			// const createdIcon = React.createElement(imported[name]);
+			// return ( <div style={{ fontSize: size, color: color }}>{createdIcon}</div> );
 		}
 
  		return (
@@ -139,7 +139,7 @@ class AppToolbar extends Component {
 	        <List>
 	          {this.pages.map((page, index) => (
 	            <ListItem button key={page.label} component="a" href={`./${page.link}`}>
-	            	{createIconAsync(page.icon)}
+	            	{/* {createIconAsync(page.icon)} */}
 	              <ListItemText className={classes.drawerLabel} primary={page.label} />
 	            </ListItem>
 	          ))}

@@ -67,10 +67,12 @@ Unused components are there for my reference.
 
 ## Known Issues
 
-- Webpack build not working correctly
+- ~~Webpack build not working correctly
 
 - Switch to lazy importing like Lego.js
 
-- Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
+-  ~~Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
 
-- Service Worker
+-  ~~Service Worker
+
+- Had to remove react-icons making bundle huge, need to make own drawer icons

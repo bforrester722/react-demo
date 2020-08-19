@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -6,19 +6,20 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
+import { auth } from '../firebase/firebase';
+import { Helmet } from 'react-helmet';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import clsx from 'clsx';
-import { auth } from '../firebase/firebase';
+import AppToolbar from './AppToolbar'
 
 // TODO find away to dynamically import
-import Home from '../pages/Home';
-import Chat from '../pages/Chat';
-import Login from '../pages/Login';
-import Signup from '../pages/Signup';
-import Lego from '../lego/Lego';
+const Home = lazy(() => import('../pages/Home'));
+const Chat = lazy(() => import('../pages/Chat'));
+const Login = lazy(() => import('../pages/Login'));
+const Signup = lazy(() => import('../pages/Signup'));
+const Lego = lazy(() => import('../lego/Lego'));
+const renderLoader = () => <p>Loading</p>;
 
-
-import AppToolbar from './AppToolbar'
 
 
 // TODO figure out if I want to have something happen to main content when drawer is open
@@ -72,7 +73,7 @@ class AppShell extends Component {
     });
   }
 
-  // updates apptoolbar title on page change
+  // updates apptoolbar title and document title on page change
   // probably doesn't make sense would just want a logo or something
   // but a reference for passing data from child to parent
   handlePageChange = (title) => {
@@ -80,7 +81,7 @@ class AppShell extends Component {
       if (prev.headerTitle === title) {
         return;
       }
-      document.title = title;
+   
       return { headerTitle: title }
     });
   }
@@ -126,29 +127,38 @@ class AppShell extends Component {
     }
 
 
-    return this.state.loading === true ? <h2 className="app-shell-loading">Loading...</h2> : (
+    return (
+      <Suspense fallback={renderLoader()}>
 
-      <div className={classes.root}>
+        <div className={classes.root}>
 
-        <AppToolbar headerTitle={headerTitle}
-                    pages={pages} 
-                    onDrawerOpenChange={this.handleDrawerOpenChange}/>
+          <Helmet>
+            <meta charSet="utf-8" />
+            <title>{headerTitle}</title>
+            <link rel="canonical" href={`https://forr-resume.web.app/${headerTitle}`} />
+            <meta name="description" content="Ben Forrester's React demo page" />
+          </Helmet>
 
-        <main className={clsx(classes.content, { [classes.contentShift]: this.state.open } )} >
-          <Router>
-            <Switch>
-              <PublicRoute exact path="/home"  authenticated={authenticated} component={Home}></PublicRoute>
-              <PrivateRoute path="/chat" authenticated={authenticated} component={() => <Chat authenticated={authenticated} onHeaderTitle={this.handlePageChange} />}></PrivateRoute>
-              <PublicRoute path="/signup"  authenticated={authenticated} component={Signup}></PublicRoute>
-              <PublicRoute path="/login" authenticated={authenticated} component={Login}></PublicRoute>
-              <PublicRoute path="/lego" authenticated={authenticated} component={Lego}></PublicRoute>
-              <Redirect to="/home" />
-            </Switch>
-          </Router>
-          <CssBaseline />
-        </main>
+          <AppToolbar headerTitle={headerTitle}
+                      pages={pages} 
+                      onDrawerOpenChange={this.handleDrawerOpenChange}/>
 
-      </div>
+          <main className={clsx(classes.content, { [classes.contentShift]: this.state.open } )} >
+            <Router>
+              <Switch>
+                <PublicRoute exact path="/home"  authenticated={authenticated} component={Home}></PublicRoute>
+                <PrivateRoute path="/chat" authenticated={authenticated} component={() => <Chat authenticated={authenticated} onHeaderTitle={this.handlePageChange} />}></PrivateRoute>
+                <PublicRoute path="/signup"  authenticated={authenticated} component={Signup}></PublicRoute>
+                <PublicRoute path="/login" authenticated={authenticated} component={Login}></PublicRoute>
+                <PublicRoute path="/lego" authenticated={authenticated} component={Lego}></PublicRoute>
+                <Redirect to="/home" />
+              </Switch>
+            </Router>
+            <CssBaseline />
+          </main>
+
+        </div>
+      </Suspense>
     );
 
   }

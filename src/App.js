@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import AppShell from './components/AppShell';
+import React, {Component, lazy, Suspense} from 'react';
+
+const AppShell = lazy(() => import('./components/AppShell'));
 
 
-
+const renderLoader = () => <p>Loading</p>;
 class App extends Component {
 
 	render() {
@@ -40,12 +41,12 @@ class App extends Component {
   	]
 
 	  return (
-	  	<div>
-	  		<AppShell pages={pages}>
-
-	  		</AppShell>
-    	</div>
-	  	
+      <Suspense fallback={renderLoader()}>
+	  	  <div>
+       		<AppShell pages={pages}>
+	     		</AppShell>
+      	</div>
+	  	</Suspense>
 
 	  );
 	}

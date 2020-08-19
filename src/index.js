@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './styles.css';
-
+import { Workbox } from "workbox-window";
 import App from './App';
+
 
 
 ReactDOM.render(
@@ -10,4 +10,12 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
+
+// setup service worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const wb = new Workbox("/src-sw.js");
+    wb.register();
+  })
+}
 // module.hot.accept();

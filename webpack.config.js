@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require('workbox-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const CopyPlugin           = require('copy-webpack-plugin');
 
 const withReport = process.env.npm_config_withReport;
 
@@ -52,14 +52,19 @@ module.exports = {
       publicPath: '/'
     },
     plugins: [
-      withReport ? new BundleAnalyzerPlugin() : '',
-      new webpack.HotModuleReplacementPlugin(),
-      new BrotliPlugin({
-         asset: '[path].br[query]',
-         test: /\.js$|\.css$|\.html$/,
-         threshold: 10240,
-         minRatio: 0.7
-       }),
+      // withReport ? new BundleAnalyzerPlugin() : '',
+      // new webpack.HotModuleReplacementPlugin(),
+      // new BrotliPlugin({
+      //    asset: '[path].br[query]',
+      //    test: /\.js$|\.css$|\.html$/,
+      //    threshold: 10240,
+      //    minRatio: 0.7
+      // }),
+      // new CopyPlugin({
+      //   patterns: [
+      //     { from: 'public', to: './' }
+      //   ],
+      // }),
       new HtmlWebpackPlugin({
         template: "./public/index.html",
         filename: "./index.html"

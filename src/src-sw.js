@@ -1,14 +1,13 @@
 import {precacheAndRoute} from 'workbox-precaching';
 import {registerRoute} from 'workbox-routing';
-import {StaleWhileRevalidate} from 'workbox-strategies'
-
-// simple service worker
+import {CacheFirst} from 'workbox-strategies'
 precacheAndRoute(self.__WB_MANIFEST, {});
 
 registerRoute(
   /https:\/\/forr-resume\.web\.app\//,
   new CacheFirst({
-    StaleWhileRevalidate: "pages",
+    cacheName: "pages",
+
   })
 );
 

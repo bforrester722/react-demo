@@ -1,6 +1,6 @@
 # react-demo
 
-Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
+8/17 Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
 
 Overall, this will be a work in progress while I am honing my skills.
 

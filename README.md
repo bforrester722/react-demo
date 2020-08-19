@@ -4,9 +4,10 @@ Welcome to my react demo. I previously been using Polymer 3 framework. Learning 
 
 Overall, this will be a work in progress while I am honing my skills.
 
-Unused components are there for my reference. 
+8/18 Website is now a PWA and runs great. Time to make pretty!
 
-```
+
+
 ## Known Issues
 
 - ~~Webpack build not working correctly
@@ -19,7 +20,8 @@ Unused components are there for my reference.
 
 - Had to remove react-icons making bundle huge, need to make own drawer icons
 
-```
+
+
 
 ## AppShell (Currently Focus)
 

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Workbox } from "workbox-window";
 import App from './App';
-
+import './styles.css';
 
 
 ReactDOM.render(

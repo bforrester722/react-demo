@@ -1,24 +1,25 @@
 # react-demo
 
-8/17 Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
-
+Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
 Overall, this will be a work in progress while I am honing my skills.
 
-8/18 Website is now a PWA and runs great. Time to make pretty!
+8/1  Started learning React
+8/17 Intial push with Lego and Chat
+8/18 Webpack and Service worker working now a PWA (Lighthouse scores all green)
+8/19 Made and added lottie animations for color and movement to home page (still needs work though) 
 
 
+## To do
 
-## Known Issues
+- Make Home page prettier
 
-- ~~Webpack build not working correctly
+- Move drawer and menu to right side
 
-- Switch to lazy importing like Lego.js
-
--  ~~Uncaught SyntaxError: Unexpected token '<' when built and depolyed likely webpack
-
--  ~~Service Worker
+- Added firebase database so I can change home page text 
 
 - Had to remove react-icons making bundle huge, need to make own drawer icons
+
+- Make two webpack configs 
 
 
 

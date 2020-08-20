@@ -1,9 +1,7 @@
 # react-demo
 
 Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
-
 Overall, this will be a work in progress while I am honing my skills.
-
 
 8/1  Started learning React
 8/17 Intial push with Lego and Chat
@@ -22,6 +20,7 @@ Overall, this will be a work in progress while I am honing my skills.
 - Had to remove react-icons making bundle huge, need to make own drawer icons
 
 - Make two webpack configs 
+
 
 
 

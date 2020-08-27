@@ -1,0 +1,109 @@
+
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+
+
+/*Chat Page*/
+.chat-content {
+  padding-top: 64px;
+  max-width:   800px;
+  margin:      auto;
+}
+
+.chat-area {
+  padding:    20px;
+  height:     calc(100vh - 230px);
+  overflow-y: scroll;
+}
+
+.chat-area::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-bubble {
+  position: relative;
+  z-index: 0;
+  border-radius:    4px;
+  max-width:        250px;
+  word-wrap:        break-word;
+  display:          flex;
+  flex-direction:   column;
+  border: 3px solid;
+  border-image-slice: 1;
+  padding: 16px;
+  border-image-source: linear-gradient(150deg,  var(--app-primary-color),  #00caf9);
+  margin: 24px 16px;
+}
+
+.chat-bubble.current-user {
+  margin-left: auto;
+  border-image-source: radial-gradient( var(--app-accent-color), #ff00ed);
+}
+
+
+
+.chat-time {
+  font-size:  12px;
+  color:      #cccccc;
+  text-align: right;
+}
+
+
+
+.send-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.text-and-send {
+  display: flex;
+}
+
+.send-btn {
+  background-color: green;
+  color:            white;
+  border-color:     transparent;
+  margin-left:      32px;
+}
+
+/*Sign up and Login*/
+.signup-form {
+  max-width: 600px;
+}
+
+.form-control {
+  width:  100%;
+  margin: 16px;
+  height: 32px;
+}
+
+.form-control {
+  width:  100%;
+  margin: 16px 0px;
+  height: 32px;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.btn-wrapper {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px, 200px));
+  justify-content:       space-between;
+}
+
+.login-btn-wrapper {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit,minmax(140px,140px));
+  justify-content:       space-between;
+}
+
+
+
+@media screen and (min-width:768px) {
+  .chat-bubble {
+    max-width: 350px;
+  }
+}

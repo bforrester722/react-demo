@@ -18,4 +18,4 @@ if ("serviceWorker" in navigator) {
     wb.register();
   })
 }
-// module.hot.accept();
+module.hot.accept();

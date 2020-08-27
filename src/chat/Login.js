@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { signin, signInWithGoogle, signInWithFacebook } from "../helpers/auth";
-
+import './chat.css';
 
 export default class Login extends Component {
   constructor() {

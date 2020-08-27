@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { auth }   from "../firebase/firebase";
 import { db }     from "../firebase/firebase";
 import { logout } from "../helpers/auth";
-
+import './chat.css';
 export default class Chat extends Component {
   
   constructor(props) {
@@ -82,7 +82,8 @@ export default class Chat extends Component {
 
   formatTime(timestamp) {
     const d = new Date(timestamp);
-    const time = `${d.getDate()}/${(d.getMonth()+1)}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+    const min = d.getMinutes() < 10 ? `0${d.getMinutes()}` : d.getMinutes();
+    const time = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()} ${d.getHours()}:${min}`;
     return time;
   }
 

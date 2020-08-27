@@ -7,21 +7,16 @@ Overall, this will be a work in progress while I am honing my skills.
 8/17 Intial push with Lego and Chat
 8/18 Webpack and Service worker working now a PWA (Lighthouse scores all green)
 8/19 Made and added lottie animations for color and movement to home page (still needs work though) 
+8/20 - 8/26 Had to work on other stuff
+8/27 Pushed up better looking dark version, still a work in progress need to clean up
 
 
 ## To do
 
-- Make Home page prettier
 
-- Move drawer and menu to right side
-
-- Added firebase database so I can change home page text 
-
-- Had to remove react-icons making bundle huge, need to make own drawer icons
+- Added firebase database so I can change home page text, did but not to handle picture coming in
 
 - Make two webpack configs 
-
-
 
 
 ## AppShell (Currently Focus)
@@ -64,7 +59,7 @@ Overall, this will be a work in progress while I am honing my skills.
  
 - Clean up CSS
  
-- componentDidMount running when drawer open?
+- ~~componentDidMount running when drawer open?
 
 
 

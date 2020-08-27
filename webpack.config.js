@@ -53,7 +53,7 @@ module.exports = {
     },
     plugins: [
       // withReport ? new BundleAnalyzerPlugin() : '',
-      // new webpack.HotModuleReplacementPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
       // new BrotliPlugin({
       //    asset: '[path].br[query]',
       //    test: /\.js$|\.css$|\.html$/,
@@ -69,9 +69,9 @@ module.exports = {
         template: "./public/index.html",
         filename: "./index.html"
       }), 
-      new InjectManifest({
-        swSrc: './src/src-sw.js'
-      })
+      // new InjectManifest({
+      //   swSrc: './src/src-sw.js'
+      // })
     ],
     devServer: {
       contentBase: './dist',

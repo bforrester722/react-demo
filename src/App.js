@@ -42,10 +42,10 @@ class App extends Component {
 
 	  return (
       <Suspense fallback={renderLoader()}>
-	  	  <div>
-       		<AppShell pages={pages}>
+	     
+       		<AppShell id="AppShell" pages={pages}>
 	     		</AppShell>
-      	</div>
+    
 	  	</Suspense>
 
 	  );

@@ -1,0 +1,35 @@
+
+
+#react-demo {
+  height:   34px;
+  width:    156px;
+  position: absolute;
+  top:      16px;
+  left:     16px;
+}
+
+.MuiTypography-body1 {
+	font-size: 32px !important;
+	color: #61dafb;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+#clickRipple {
+  background-image: linear-gradient(  black 80%,  #e442fc 80%, #61dafb 84%, transparent 95%)
+}
+
+.glow {
+  color: #fff;
+  text-align: center;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 2px 2px 1px #e442fc;
+  }
+  to {
+    text-shadow: 2px 2px 5px #e442fc;
+  }
+}
+

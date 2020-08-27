@@ -14,9 +14,9 @@ import AppToolbar from './AppToolbar'
 
 // TODO find away to dynamically import
 const Home = lazy(() => import('../pages/Home'));
-const Chat = lazy(() => import('../pages/Chat'));
-const Login = lazy(() => import('../pages/Login'));
-const Signup = lazy(() => import('../pages/Signup'));
+const Chat = lazy(() => import('../chat/Chat'));
+const Login = lazy(() => import('../chat/Login'));
+const Signup = lazy(() => import('../chat/Signup'));
 const Lego = lazy(() => import('../lego/Lego'));
 const renderLoader = () => <p>Loading</p>;
 
@@ -130,7 +130,7 @@ class AppShell extends Component {
     return (
       <Suspense fallback={renderLoader()}>
 
-        <div className={classes.root}>
+        {/* <div id="poop" className={classes.root}> */}
 
           <Helmet>
             <meta charSet="utf-8" />
@@ -146,7 +146,7 @@ class AppShell extends Component {
           <main className={clsx(classes.content, { [classes.contentShift]: this.state.open } )} >
             <Router>
               <Switch>
-                <PublicRoute exact path="/home"  authenticated={authenticated} component={Home}></PublicRoute>
+                <PublicRoute exact path="/home" open={this.state.open} authenticated={authenticated} component={Home}></PublicRoute>
                 <PrivateRoute path="/chat" authenticated={authenticated} component={() => <Chat authenticated={authenticated} onHeaderTitle={this.handlePageChange} />}></PrivateRoute>
                 <PublicRoute path="/signup"  authenticated={authenticated} component={Signup}></PublicRoute>
                 <PublicRoute path="/login" authenticated={authenticated} component={Login}></PublicRoute>
@@ -157,7 +157,7 @@ class AppShell extends Component {
             <CssBaseline />
           </main>
 
-        </div>
+        {/* </div> */}
       </Suspense>
     );
 

@@ -3,12 +3,13 @@
 Welcome to my react demo. I previously been using Polymer 3 framework. Learning React to expand my abilities. 
 Overall, this will be a work in progress while I am honing my skills.
 
-8/1  Started learning React
-8/17 Intial push with Lego and Chat
-8/18 Webpack and Service worker working now a PWA (Lighthouse scores all green)
-8/19 Made and added lottie animations for color and movement to home page (still needs work though) 
-8/20 - 8/26 Had to work on other stuff
-8/27 Pushed up better looking dark version, still a work in progress need to clean up
+- 8/1  Started learning React
+- 8/17 Intial push with Lego and Chat
+- 8/18 Webpack and Service worker working now a PWA (Lighthouse scores all green)
+- 8/19 Made and added lottie animations for color and movement to home page (still needs work though) 
+- 8/20 - 8/26 Had to work on other stuff
+- 8/27 Pushed up better looking dark version, still a work in progress need to clean up
+- *8/27 left image coming from database big so I can work to handle lag
 
 
 ## To do

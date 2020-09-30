@@ -10,7 +10,8 @@ Overall, this will be a work in progress while I am honing my skills.
 - 8/20 - 8/26 Had to work on other stuff
 - 8/27 Pushed up better looking dark version, still a work in progress need to clean up
 - *8/27 left image coming from database big so I can work to handle lag
-
+- 9/1 - 9/29 Mom passed away
+- 9/30 Fixed routing issue where not acting like SPA
 
 ## To do
 

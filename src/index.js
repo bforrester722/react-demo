@@ -1,21 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Workbox } from "workbox-window";
-import App from './App';
+import React     from 'react';
+import ReactDOM  from 'react-dom';
+import {Router}   from 'react-router-dom';
+import {Workbox} from 'workbox-window';
+import history   from './history';
+import App       from './App';
 import './styles.css';
 
 
 ReactDOM.render(
-  <App  />,
+ <Router history={history}>
+    <App />
+  </Router>, 
   document.getElementById('app')
 );
 
 
-// setup service worker
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    const wb = new Workbox("/src-sw.js");
-    wb.register();
-  })
+  navigator.serviceWorker
+    .register("./firebase-messaging-sw.js")
+    .then(function(registration) {
+      console.log("Registration successful, scope is:", registration.scope);
+    })
+    .catch(function(err) {
+      console.log("Service worker registration failed, error:", err);
+    });
 }
+
 module.hot.accept();

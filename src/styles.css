@@ -1,26 +1,20 @@
 
-@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+/*shared*/
+
+.loading {
+  opacity:    0;
+}
+
 
 html {
-  --app-primary-color:    #61dafb ;
-  --app-accent-color:    #e442fc;
+  --app-primary-color:  #61dafb ;
+  --app-accent-color:   #e442fc;
 }
+
 #app {
-  font-size: 16px;
+  font-size:        16px;
   background-color: black;
-  min-height: 100vh;
-}
-
-p {
-  margin: 0;
-  color: white;
-}
-
-div {
-  color: white;
-}
-ul {
-  padding-left: 8px;
+  min-height:       100vh;
 }
 
 .app-shell-loading {
@@ -30,88 +24,142 @@ ul {
   height:           256px;
 }
 
-.btn {
-  background-color: var(--app-primary-color);
+a {
+  color:           var(--app-primary-color);
+  text-shadow:     3px 2px 2px #e442fc;
   text-decoration: none;
-  margin: 16px;
-  color: #FFF;
-  padding: 12px;
-  min-width: 120px;
-  border-radius: 8px;
+}
 
+p {
+  margin: 0;
+  color:  white;
+}
 
-  border-color: transparent;
+div {
+  color: white;
+}
+
+ul {
+  padding-left: 16px;
 }
 
 .content {
-  padding:      64px 16px;
+  padding:      92px 16px;
   margin:       auto;
   max-width:    600px;
+}
+
+.btn {
+  background-color: var(--app-primary-color);
+  text-decoration:  none;
+  margin:           16px;
+  color:            #FFF;
+  padding:          12px;
+  min-width:        120px;
+  border-radius:    8px;
+  border-color:     transparent;
 }
 
 .error-txt {
   color: red;
 }
 
+
+/*Home Page*/
 .home-page {
-  max-width:    800px;
-  /*padding-top:  54px;*/
-  margin:       auto;
-  transition:   transform .6s cubic-bezier(0,0,0,1.25);
+  /*max-width:        800px;*/
+  position:         relative; 
+  margin:           auto;
   background-color: black;
-  color: white;
+  color:            white;
+  padding-bottom:   64px;
 }
 
-
-
-#lottie-wrapper {
-   position: absolute;
-     top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 .img-animation-wrapper {
   position: relative;
-
+  overflow: hidden;
+  max-width:    100vw;
 }
 
-
-
-
 .img-wrapper {
-  /*display:         flex;*/
-  padding-top:    64px;
-  min-height:      340px;
-/*  justify-content: center;
-  align-items:     center;*/
-
+  padding-top:     64px;
+  min-height:      calc(50vh + 64px);
+  display:         flex;
+  justify-content: center;
 }
 
 .home-page-img {
+  position:   relative;
+  width:      100%;
+  height: 50vh;
+  opacity:    0;
+  transition: opacity 2s cubic-bezier(0,0,0,1.25); 
+}
+
+.loaded {
+  opacity: 1;
+}
+
+#lottie-wrapper {
+  position:  absolute;
+  top:       60%;
+  left:      50%;
+  transform: translate(-50%, -50%);
+}
+
+.react-animation {
+/*  width: 320px;
+  min-height: 2px;*/
+}
+
+.home-main-txt {
+  padding: 16px;
+}
+
+.synth-grid {
+  position: absolute;
+  width: 125vw;
+  bottom: -15px;
+
+    /* position the top  edge of the element at the middle of the parent */
+    left: 50%; /* position the left edge of the element at the middle of the parent */
+
+    transform: translate(-50%, 0%);
+}
+.home-grid {
+       padding-bottom: 256px;
+}
+.parallax-wrapper {
   position: relative;
-  width: 100%;
-  max-height:   400px;
-
-
 }
 
-.home-translate {
-  transition: transform .6s cubic-bezier(0,0,0,1.25);
-  transform: translateY(-60px);
+.parallax {
+  min-height:             304px;
+  background-attachment:  fixed;
+  background-position:    center;
+  background-repeat:      no-repeat;
+  background-size:        164px;
 }
 
-a {
-  color: var(--app-primary-color);
-   text-shadow: 3px 2px 2px #e442fc;
-  text-decoration: none;
+.palms {
+  position:   absolute;
+  bottom:     0;
+  left:       50%;
+  transform:  translate(-50%, -50%);
+  width:      350px;
 }
 
+.section-wrapper {
+  padding: 64px 16px;
+}
 
 
 @media screen and (min-width:768px) {
+
   p, li {
-    font-size: 20px;
+    font-size: 24px;
   }
+
   h2 {
     font-size: 30px;
   }
@@ -120,26 +168,41 @@ a {
     font-size: 18px;
   }
 
-  .home-page {
-    padding: 64px 0px 128px;
+  .home-main-txt-wrapper {
+       display: flex;
+
+      flex-direction: column;
+      align-items: center;
+  }
+  .home-main-txt-wrapper p{
+ 
+    text-align: center;
+    max-width: 800px;
+  }
+
+  .img-wrapper {
+    min-height:      calc(100vh + 64px);
+  }
+
+#lottie-wrapper {
+
+  top:       50%;
+
+}
+  .home-page-img {
+    height: calc(100vh - 64px);
   }
   
   .home-grid {
-  /*  display: grid; 
+    display: grid; 
      grid-template-columns: 1fr 1fr;
-     padding: 64px;*/
+     padding: 64px;
+
   }
 
   .home-main-txt {
     padding: 64px 16px 16px;
   }
 
-  .home-translate {
-    transform: translateY(-256px);
-  }
-
-  .img-wrapper {
-    /*padding-bottom: 64px;*/
-  }
 
 }

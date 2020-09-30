@@ -30,6 +30,7 @@ export default class Lego extends Component {
     
     colorCorrections: {
       auburn: '#922724',
+      black:  '#232323',
       blond:  'gold',
       blonde:  'gold',
       brown:  'saddlebrown',

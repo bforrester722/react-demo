@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Lottie from 'react-lottie';
-import {wait} from '../helpers/utils';
-import {firestore} from '../firebase/firebase';
-
+import {get, wait} from '../helpers/utils';
 import vaderAnimation from '../animations/vader.json';
 import chatAnimation from '../animations/chat.json';
 import reactAnimation from '../animations/data.json';
-
+import { ReactComponent as Sun } from './sun.svg';
+import { messaging } from "../firebase/firebase";
+import { functions } from "../firebase/firebase";
 export default class HomePage extends Component {
 
   constructor(props) {
@@ -22,33 +22,39 @@ export default class HomePage extends Component {
     reactAnimation:  reactAnimation,
     dimensions:     '150px',
     isPaused:       true,
-     reactDimensions: {
-        height: '166',
-        width: '300'
-      }
+    reactDimensions: {
+      height: '166',
+      width: '300'
+    }
   }
 
+
+
+
+
   async componentDidMount() {
+    // this.setupMessaging();
     this._isMounted = true;
-    this.getBackgroudImg();
+    
     this.checkWidth = () => {
       const match = window.matchMedia(`(min-width: 768px)`);
       if (match.matches) {
         this.setState({
+          bigScreen:  true,
           dimensions: '250px',
           reactDimensions: {
             height: 520,
-            width: 900
+            width: 1200
           }
         })
-   
       }
       else {
         this.setState({
+          bigScreen:  false,
           dimensions: '150px',
           reactDimensions: {
             height: 350,
-            width: 350
+            width: 500
           }
         })
       }
@@ -56,22 +62,67 @@ export default class HomePage extends Component {
 
 
     this.checkWidth();
+    this.getBackgroudImg();
+
     window.addEventListener("resize", this.checkWidth);
+ 
   }
 
+
+
+  async setupMessaging() {
+
+  messaging.requestPermission()
+    .then(async function() {
+      const token = await messaging.getToken();
+      console.log(token)
+        var messages = {
+          message: {
+            notification: {
+              title: "You have a ass service request",
+              body: "this is the main body"
+            },
+            data: {
+              score: '850',
+              time: '2:45'
+            }
+          },
+          
+          token: token
+        }
+        console.log(messages)
+        var sendNotification = functions.httpsCallable('sendNotification');
+        await sendNotification({data: messages});
+
+       
+            // .then(function (response) {
+            //     console.log("Successfully sent message:", response);
+            // })
+            // .catch(function (error) {
+            //     console.log("Error sending message:", error);
+//             });
+    })
+    .catch(function(err) {
+      console.log("Unable to get permission to notify.", err);
+    });
+  navigator.serviceWorker.addEventListener("message", (message) => alert(message.data.notification.title));
+}
+
+  // get image and text from firebase
   async getBackgroudImg() {
     if (!this._isMounted) { return }
-      const get = async ({coll, doc}) => {
-      const docData = await firestore.collection(coll).doc(doc).get();
-      if (docData.exists) {
-        return docData.data();
+    const {backgroundImg, backgroundImgBig, wording, palms, sun} = await get({coll: 'pages', doc: 'home'});
+    const selectImg = (small, big) => {
+      if (this.state.bigScreen) {
+        return big
       }
-      throw new Error(`No such document! ${coll}/${doc}`);
-    };
-    const {backgroundImg, wording} = await get({coll: 'pages', doc: 'home'});
+      return small
+    }
     this._isMounted && this.setState({
-      backgroundImg: backgroundImg,
-      wording: wording
+      backgroundImg: selectImg(backgroundImg, backgroundImgBig),
+      wording: wording,
+      sun: sun,
+      palms: palms
     })
   }
 
@@ -79,9 +130,8 @@ export default class HomePage extends Component {
   async setPause() {
     await wait(1500);
     this._isMounted && this.setState({
-          isPaused: false
-        })
-
+      isPaused: false
+    })
   }
 
 
@@ -108,7 +158,6 @@ export default class HomePage extends Component {
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid slice'
         },
-
       }
     }
     return {
@@ -121,18 +170,27 @@ export default class HomePage extends Component {
     }
   };
 
+  handleImageLoaded() {
+    this.setState({ imageStatus: "loaded" });
+   
+  }
 
-   getImg(img) {
+  getImg(img) {
     if (img) {
       this.setPause();
-      return <img className="home-page-img" 
+      return <img className={`home-page-img ${this.state.imageStatus}` } 
                src={this.state.backgroundImg} 
+               onLoad={this.handleImageLoaded.bind(this)}
                alt="Forr Resume home page img"/>
-                  
     }
     else {
       return <h3 style={{marginTop: '-64px'}}>...Loading</h3>
     }
+  }
+
+  setReactDimensions() {
+    const {width} = screen ;
+    return width;
   }
 
   render() {
@@ -151,39 +209,40 @@ export default class HomePage extends Component {
   ];
 
 
+    // const {reactDimensions} = this.state;
+    const width = this.setReactDimensions();
 
-    const {height, width} = this.state.reactDimensions
     const speed = .6;
 
 
     return (
       <div className={`home-page`} >
-        <div className="home-grid">
+        {/* <div className="home-grid"> */}
           <div className="img-animation-wrapper">
             <div className="img-wrapper">{this.getImg(this.state.backgroundImg)}</div>
             <div id="lottie-wrapper" className={` ${this.state.pageClass}`}>
               <Lottie isPaused={this.state.isPaused}
                       eventListeners={eventListeners}
                       className="react-aniamtion"
-                      style={{paddingTop: '32px'}}
+              
+                      speed={1.2}
                       options={this.lottieOptions('reactAnimation')}
-                      height={height}
+                      height={width}
                       width={width}/>
             </div>
           </div>
+          <div className="home-main-txt-wrapper">
           <p className="home-main-txt" >
             Since a lot of employers are looking for developers with React experience, I thought it best to start and learn it. 
             That is where this project comes in, made with React and Firebase. This is very much a work in progress I started at around 8-1-2020. 
-            I will remedy issues as I continue to learn best practices. At the moment working on making large screen devices look better. Looks pretty good on phone.
-            All known issues I put on the README at <a rel="noreferrer"  className="link"target="_blank" href="https://github.com/bforrester722/react-demo">my github</a>. 
+            I will remedy issues as I continue to learn best practices. All known issues I put on the README at <a rel="noreferrer"  className="link"target="_blank" href="https://github.com/bforrester722/react-demo">my github</a>. 
           </p>
+    
+       
+        </div> 
 
-          <p style={{padding: '16px'}}>Right now, there are two main sections Lego and Chat.</p>  
-        </div>
-
-        <div style={{padding: '16px'}}> 
-          <div style={{padding: '16px 0px'}}> 
-            
+         <div className="home-grid">
+          <div className="section-wrapper"> 
             <Lottie options={this.lottieOptions('vaderAnimation')}
                     height={this.state.dimensions}
                     speed= {speed}
@@ -197,18 +256,19 @@ export default class HomePage extends Component {
             </ul>
           </div>
           
-          <div>
+          <div className="section-wrapper">
             
             <Lottie options={this.lottieOptions('chatAnimation')}
                     height={this.state.dimensions}
                     speed= {speed}
                     width={this.state.dimensions}/>
-            <h2><Link to="/chat" className="link">Chat</Link> (very basic right now)</h2>         
+            <h2><Link to="/chat" className="link">Chat</Link></h2>         
             <ul>
               <li>Allows users to sign up and login with email, Google account, or Facebook</li>
               <li>Showcases working Firebase Login and Firebase Realtime Database</li>
             </ul>
           </div>
+
         </div>
       </div>
     )

@@ -28,11 +28,19 @@ module.exports = {
           ]
         },
         {
-          test: /\.css$/,
+        test: /\.css$/,
           use: [
             "style-loader", 
             { loader: "css-loader", options: { import: true } }
           ]       
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader'
+          ]
         },
         {
           test: /\.mp3$/,
@@ -41,8 +49,20 @@ module.exports = {
               name: 'audio/[name].[ext]',
            }
         },
+        {
+          test: /\.svg$/,
+          use: [
+            {
+              loader: 'svg-url-loader',
+              options: {
+                limit: 10000,
+              },
+            },
+          ],
+        },
       ]
     },
+    // target: 'node',
     resolve: {
       extensions: ['*', '.js', '.jsx', '.css']
     },
@@ -65,10 +85,10 @@ module.exports = {
       //     { from: 'public', to: './' }
       //   ],
       // }),
-      new HtmlWebpackPlugin({
-        template: "./public/index.html",
-        filename: "./index.html"
-      }), 
+      // new HtmlWebpackPlugin({
+      //   template: "./public/index.html",
+      //   filename: "./index.html"
+      // }), 
       // new InjectManifest({
       //   swSrc: './src/src-sw.js'
       // })
@@ -78,7 +98,7 @@ module.exports = {
       hot: true,
       port: 3000,
       historyApiFallback: true,
-      host: '192.168.1.7'
+      host: 'localhost'
     }
 
 };

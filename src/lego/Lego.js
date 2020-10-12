@@ -27,30 +27,27 @@ export default class Lego extends Component {
     hair:       0,
     leg:        0,
     opacity:    '.5',
-    
+    // corrects colors coming from API
     colorCorrections: {
-      auburn: '#922724',
-      black:  '#232323',
-      blond:  'gold',
-      blonde:  'gold',
-      brown:  'saddlebrown',
-      dark:   '#42210B',
-      fair:   'bisque',
-      hazel:  'radial-gradient(yellow, #594c26 )',
-      light:  'navajowhite',
-      metal:  'silver',
-      pale:   'bisque',
-      unknown:'brown',
-      white:  '#ddd6de',
-      none:   'saddlebrown',
-      'green-tan' : 'green'
+      auburn:       '#922724',
+      black:        '#232323',
+      blond:        'gold',
+      blonde:       'gold',
+      brown:        'saddlebrown',
+      dark:         '#42210B',
+      fair:         'bisque',
+      hazel:        'radial-gradient(yellow, #594c26 )',
+      light:        'navajowhite',
+      metal:        'silver',
+      pale:         'bisque',
+      unknown:      'brown',
+      white:        '#ddd6de',
+      none:         'saddlebrown',
+      'green-tan':  'green'
     },
   };
 
-    // random number for setting hair, face, and body
-  getRandomNum(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
+
 
   // fetch random starwars char when ready
   componentDidMount() {
@@ -75,8 +72,12 @@ export default class Lego extends Component {
       textIn:     false
     })
     this.translateCharOptions();
-
     this.fetchRandomCharacter();
+  }
+
+  // random number for setting hair, face, and body
+  getRandomNum(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   // fetch character from swapi.dev/api
@@ -90,10 +91,9 @@ export default class Lego extends Component {
         })
   }
 
-
   // updates character and runs animation to new values
   async updateCharacter(char) {
-    await wait(1000)
+    await wait(750)
     if (this._isMounted) {
       if (char.name === 'Darth Vader') {
         this.setVader(char);
@@ -142,20 +142,14 @@ export default class Lego extends Component {
         leg:        400,
         opacity:    '1',
         textIn:     true
-      })
+    })
     this.translateCharOptions();
     const audio = new Audio(vader)
-    audio.volume = 0.2;
+    audio.volume = 0.5;
     audio.play()
   }
 
   // animates to random selected value
-  // translateCharOptions(name, state) {
-  //   var feature = document.querySelector(`.${name}`);
-  //   feature.style.transform = 'translateX(-' + this.state[state] + '%)';
-  // }
-
-
   translateCharOptions() {
     const featuresArray = [ 
       {wrapper: 'hair-styles',  item: 'hair' },
@@ -249,7 +243,7 @@ export default class Lego extends Component {
   getSize(char) {
     const {height} = char;
     if (!height ) {
-      return {transform: 'scale(.6)'}; 
+      return {transform: 'scale(.5)'}; 
     }
     const xMulti = height / 170 - .5;
     const x = this.getDemision(xMulti)
@@ -272,15 +266,16 @@ export default class Lego extends Component {
       <div className="lego-page">
         <div className="lego-info-wrapper">
           <div className="minifigure-wrapper">
-            <h2 className={textIn ? 'textIn' : ''} style={{textAlign: 'center', opacity: 1, height: '23px', marginTop: '16px', marginBottom: '-24px'}}> {character.name}</h2>
+            <h2 className={textIn ? 'textIn + minifigure-name' : 'minifigure-name'}>
+              {character.name}
+            </h2>
             <div className="minifigure " style={this.getSize(character)}>
 
               <div className="head">
                 <Face skinColor={skinColor} eyeColor={eyeColor} opacity={opacity}/>
                 <div className="hairs">
-                <Hair hairColor={hairColor} skinColor={skinColor} opacity={opacity} />
-              </div>
-               
+                  <Hair hairColor={hairColor} skinColor={skinColor} opacity={opacity} />
+                </div>
               </div>
               <Body skinColor={skinColor} opacity={opacity}/>
               <div className="lower">
@@ -290,9 +285,9 @@ export default class Lego extends Component {
           </div>
 
           <div className="controls">
-            <fieldset className="head-expression">
+            <fieldset>
 
-              <div className="form-element">
+              <div>
                 <label htmlFor="hair">Hair
                 <input onChange={(event) => this.setFeature(event, 'hair', 'hair-styles')} 
                        onTouchStart={(event) => this.animateFeature({raise: 'hairs'})} 
@@ -301,14 +296,14 @@ export default class Lego extends Component {
                 </label>
               </div>
           
-              <div className="form-element">
+              <div>
                 <label htmlFor="face">Face
                 <input onChange={(event) => this.setFeature(event, 'face', 'faces')}
                        name="face" type="range" min="0" max="400" step="100" value={face}/>
                 </label>
               </div>
           
-              <div className="form-element">
+              <div>
                 <label htmlFor="body">Body
                 <input onChange={(event) => this.setFeature(event, 'body', 'bodies')}
                        onTouchStart={(event) => this.animateFeature({lower: 'lower', raise: 'head'})} 
@@ -317,7 +312,7 @@ export default class Lego extends Component {
                 </label>
               </div>
        
-              <div className="form-element">
+              <div>
                 <label htmlFor="legs">Legs
                 <input onChange={(event) => this.setFeature(event, 'leg', 'legs')} 
                        onTouchStart={() => this.animateFeature({lower: 'lower'})}

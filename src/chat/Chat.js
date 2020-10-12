@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import {auth, db}   from "../firebase/firebase";
-import {logout}     from "../helpers/auth";
-import {get, set}     from "../helpers/utils";
-import {firestore}  from '../firebase/firebase';
-import { functions } from "../firebase/firebase";
-import {messaging}  from '../firebase/firebase';
+import {auth}       from "../firebase/auth";
+import {db}         from "../firebase/db";
+import {logout}     from "../helpers/login";
+import {get}        from "../helpers/utils";
+import {firestore}  from '../firebase/firestore';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import './chat.css';
-import './styles.scss';
+
 export default class Chat extends Component {
   
   constructor(props) {
@@ -39,13 +38,10 @@ export default class Chat extends Component {
 
     this._isMounted = true;
     this.setState({ readError: null, loadingChats: true });
-
-    const chatArea = this.myRef.current;
     this.getBackgroudImg();
- // navigator.serviceWorker.addEventListener("message", (message) => alert(message.data.notification.title));
-    
+    const chatArea = this.myRef.current;
+
     try {
-     // this.setupMessaging();
       db.ref('chats').on('value', snapshot => {
         const chats = [];
         snapshot.forEach((snap) => {
@@ -56,17 +52,6 @@ export default class Chat extends Component {
         chatArea.scrollBy(0, chatArea.scrollHeight);
         this.setState({ loadingChats: false });
       });
-
-      const token = await messaging.getToken();
-      set({
-        coll:  'users', 
-        doc:   this.state.user.uid,
-        data:  {token: token},          
-        merge: false
-      });
-   console.log(this.state.user.uid)
-      console.log(token)
-    
     } 
     catch (error) {
       this.setState({ readError: error.message, loadingChats: false });
@@ -81,44 +66,6 @@ export default class Chat extends Component {
   }
 
 
-  async setupMessaging() {
-
-  messaging.requestPermission()
-    .then(async function() {
-      const token = await messaging.getToken();
-      console.log(token)
-        var messages = {
-          message: {
-            notification: {
-              title: "You have a ass service request",
-              body: "this is the main body"
-            },
-            data: {
-              score: '850',
-              time: '2:45'
-            }
-          },
-          
-          token: token
-        }
-        console.log(messages)
-        var sendNotification = functions.httpsCallable('sendNotification');
-        await sendNotification({data: messages});
-
-       
-            // .then(function (response) {
-            //     console.log("Successfully sent message:", response);
-            // })
-            // .catch(function (error) {
-            //     console.log("Error sending message:", error);
-//             });
-    })
-    .catch(function(err) {
-      console.log("Unable to get permission to notify.", err);
-    });
-  navigator.serviceWorker.addEventListener("message", (message) => alert(message.data.notification.title));
-}
-
   // Saves sent chat to realtime database
   async handleSend(event) {
     event.preventDefault();
@@ -131,29 +78,6 @@ export default class Chat extends Component {
         uid: this.state.user.uid
       });
       this.setState({ content: '' });
-      console.log(this.state.user.uid)
-
-      if (this.state.user.uid !== 'yt4mHGtANvYxCw0sTAfqF2QTWkU2') {
-        const {token} = await get({coll: 'users', doc: 'yt4mHGtANvYxCw0sTAfqF2QTWkU2'});
-    
-          var messages = {
-            message: {
-              notification: {
-                title: "You have a new message",
-                body: "this is the main body"
-              },
-              data: {
-                score: '850',
-                time: '2:45'
-              }
-            },
-            token: token
-        }
-        console.log(messages)
-        var sendNotification = functions.httpsCallable('sendNotification');
-        await sendNotification({data: messages});
-      }
-
       chatArea.scrollBy(0, chatArea.scrollHeight);
 
     } catch (error) {
@@ -222,8 +146,9 @@ export default class Chat extends Component {
       <div className="chat-content">
 
         <div className={`${this.state.chatWrapperClass} chat-wrapper`}>
+          
           <div className="chat-area" ref={this.myRef}>
-            <img className="sun glitch" data-text="glitch" src={this.state.sun}/>
+            <img className="sun" src={this.state.sun}/>
             <div className="palm-trees" style={{ backgroundImage:`url(${this.state.palms})` }}>
               {/* loading indicator */}
               {this.state.loadingChats ? <div role="status">Loading...</div> : ''}
@@ -248,9 +173,8 @@ export default class Chat extends Component {
         </div>
   
         <div className={`${this.state.pulloutClass} pullout pullout-blue`}></div>
- 
         <div className={`${this.state.pulloutClass} pullout`} 
-            onClick={this.handelPullout}>
+             onClick={this.handelPullout}>
           <ChevronRight className={`${this.state.chevronClass} chat-chevron`} />
         </div>
 

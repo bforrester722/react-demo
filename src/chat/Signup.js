@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { signup, signInWithGoogle, signInWithFacebook} from "../helpers/auth";
+import { signup, signInWithGoogle, signInWithFacebook} from "../helpers/login";
 import './chat.css';
 
 export default class SignUp extends Component {
@@ -15,7 +15,7 @@ export default class SignUp extends Component {
     password: '',
   };
 
-
+  // sets page title
   componentDidMount() {
     this.props.onHeaderTitle('Sign Up');  
   }
@@ -62,7 +62,7 @@ export default class SignUp extends Component {
   
       <div className="content">
 
-        <div id="signup-content">
+        
           <form className="signup-form" onSubmit={this.handleSubmit} >
             <p>Fill in the form below to create an account.</p>
             <div>
@@ -72,7 +72,7 @@ export default class SignUp extends Component {
               <input className="form-control" placeholder="Password" name="password" onChange={this.handleChange} value={this.state.password} type="password"></input>
             </div>
             <div>
-              {this.state.error ? <p className="text-danger">{this.state.error}</p> : null}
+              {this.state.error ? <p className="error-txt">{this.state.error}</p> : null}
               <button className="btn" type="submit">Sign up</button>
             </div>
             <p>You can also sign up with any of these services</p>
@@ -87,7 +87,7 @@ export default class SignUp extends Component {
             <hr></hr>
             <p>Already have an account? <Link to="/login">Login</Link></p>
           </form>
-        </div>
+      
       </div>
     )
   }

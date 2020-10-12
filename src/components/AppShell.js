@@ -1,34 +1,32 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, {Component, lazy} from 'react';
 import {
   Route,
   Router,
   Switch,
   Redirect,
   withRouter,
-  useHistory,
 } from 'react-router-dom';
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
-import { auth } from '../firebase/firebase';
-import { Helmet } from 'react-helmet';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppToolbar from './AppToolbar'
-import history from '../history';
+import {auth}   from '../firebase/auth';
+import {Helmet} from 'react-helmet';
+import history  from '../history';
+ 
+// Lazy components
+const AppToolbar  = lazy(() => import('./AppToolbar'));
+const CssBaseline = lazy(() => import('@material-ui/core/CssBaseline'));
 
-// TODO find away to dynamically import
-const Home = lazy(() => import('../pages/Home'));
-const Chat = lazy(() => import('../chat/Chat'));
-const Login = lazy(() => import('../chat/Login'));
-const Signup = lazy(() => import('../chat/Signup'));
-const Lego = lazy(() => import('../lego/Lego'));
+// Lazy Pages
+const Home    = lazy(() => import('../home/Home'));
+const Chat    = lazy(() => import('../chat/Chat'));
+const Login   = lazy(() => import('../chat/Login'));
+const Signup  = lazy(() => import('../chat/Signup'));
+const Lego    = lazy(() => import('../lego/Lego'));
 
 
 class AppShell extends Component {
 
   state = {
     authenticated: false,
-    headerTitle:   'Home',
-    loading:       true,
-    open:          false
+    headerTitle:   'Home'
   }
 
   // When firebase log in status changed update authenticated
@@ -37,41 +35,27 @@ class AppShell extends Component {
       if (user) {
         this.setState ( { 
           authenticated: true,
-          loading: false
         })
       } 
       else {
          this.setState ( { 
           authenticated: false,
-          loading: false
         })
       }
     });
   }
 
-  // updates apptoolbar title and document title on page change
-  // probably doesn't make sense would just want a logo or something
-  // but a reference for passing data from child to parent
+  // updates document title on page change
   handlePageChange = (title) => {
-
     this.setState(prev => {
       if (prev.headerTitle === title) {
         return;
       }
-   
       return { headerTitle: title }
     });
   }
 
-  // gets if drawer open from AppToolbar 
-  // will be used to shift page over when drawer open
-  handleDrawerOpenChange = (drawer) => {
-    this.setState(prev => {
-      return { open: drawer }
-    });
-  }
-
-
+  // updates history when link clicked in AppToolbar drawer for navagation
   handleDrawerLinkClicked = (link) => {
     const {pathname} = this.props.location;
     if (pathname === link) { return; }
@@ -81,9 +65,10 @@ class AppShell extends Component {
 
   render() {
 
-    const {classes, pages, theme}      = this.props;
-    const {authenticated, headerTitle} = this.state; 
-    // Route if user is logged in
+    const {pages}      = this.props;
+    const {authenticated, headerTitle} = this.state;
+
+    // If user logged in go to chat else to login page
     function PrivateRoute({ component: Component, authenticated, ...rest}) {
       return (
         <Route
@@ -104,7 +89,6 @@ class AppShell extends Component {
           render={(props) => authenticated === false || pathname === '/Lego' || pathname === '/Home'
             ? <Component {...props} onHeaderTitle={this.handlePageChange}/>
             : <Redirect to={{ pathname: '/chat',  }} />}
-
         />
       )
     }
@@ -119,13 +103,12 @@ class AppShell extends Component {
           <meta name="description" content="Ben Forrester's React demo page" />
         </Helmet>
 
-        <AppToolbar headerTitle={headerTitle}
-                    pages={pages} 
+        <AppToolbar pages={pages} 
                     onDrawerLinkClicked={this.handleDrawerLinkClicked}/>
         <main >
           <Router history={history}>
             <Switch>
-              <PublicRoute exact path="/home" open={this.state.open} authenticated={authenticated} component={Home}></PublicRoute>
+              <PublicRoute exact path="/home" authenticated={authenticated} component={Home}></PublicRoute>
               <PrivateRoute path="/chat" authenticated={authenticated} component={() => <Chat authenticated={authenticated} onHeaderTitle={this.handlePageChange} />}></PrivateRoute>
               <PublicRoute path="/signup"  authenticated={authenticated} component={Signup}></PublicRoute>
               <PublicRoute path="/login" authenticated={authenticated} component={Login}></PublicRoute>
@@ -133,7 +116,7 @@ class AppShell extends Component {
               <Redirect to="/home" />
             </Switch>
           </Router>
-          <CssBaseline />
+          <CssBaseline /> 
         </main>
       </div>
 

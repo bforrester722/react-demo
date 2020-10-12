@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { signin, signInWithGoogle, signInWithFacebook } from "../helpers/auth";
+import { signin, signInWithGoogle, signInWithFacebook } from "../helpers/login";
 import './chat.css';
 
 export default class Login extends Component {
@@ -17,7 +17,7 @@ export default class Login extends Component {
     this.facebookSignIn = this.facebookSignIn.bind(this);
   }
 
-
+  // sets page title
   componentDidMount() {
     this.props.onHeaderTitle('Login');  
   }
@@ -64,7 +64,6 @@ export default class Login extends Component {
       <div className="content">
         <form autoComplete="off"
               onSubmit={this.handleSubmit}>
-
           <p>
             Fill in the form below to login to your account.
           </p>
@@ -73,31 +72,24 @@ export default class Login extends Component {
           <div>If you want to chat with someone they can use testingChat2@asdf.com and password.</div>
           <h4>Email: testingChat@asdf.com</h4>
           <h4>Password: password</h4>
-         
-          <div className="form-group">
-            <input
-              className="form-control"
-              placeholder="Email"
-              name="email"
-              type="email"
-              onChange={this.handleChange}
-              value={this.state.email}/>
-          </div>
-     
-          <div className="form-group">
-            <input
-              className="form-control"
-              placeholder="Password"
-              name="password"
-              onChange={this.handleChange}
-              value={this.state.password}
-              type="password"/>
-          </div>
+      
+          <input className="form-control"
+                 placeholder="testingChat@asdf.com"
+                 name="email"
+                 type="email"
+                 onChange={this.handleChange}
+                 value={this.state.email}/>
+   
+          <input className="form-control"
+                 placeholder="password"
+                 name="password"
+                 onChange={this.handleChange}
+                 value={this.state.password}
+                 type="password"/>
+      
+          {this.state.error ? (<p className="error-txt">{this.state.error}</p>) : null}
+          <button className="btn" type="submit">Login</button>
 
-          <div className="form-group">
-            {this.state.error ? (<p className="error-txt">{this.state.error}</p>) : null}
-            <button className="btn" type="submit">Login</button>
-          </div>
           <p>You can also log in with any of these services</p>
           <div className="login-btn-wrapper">
             <button className="btn" type="button" onClick={this.googleSignIn}>

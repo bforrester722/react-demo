@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 
 export default class Face extends Component {
 
-
-
 	render() {
 		
 		const {skinColor, eyeColor} = this.props

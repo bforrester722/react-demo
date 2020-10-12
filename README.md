@@ -9,30 +9,20 @@ Overall, this will be a work in progress while I am honing my skills.
 - 8/19 Made and added lottie animations for color and movement to home page (still needs work though) 
 - 8/20 - 8/26 Had to work on other stuff
 - 8/27 Pushed up better looking dark version, still a work in progress need to clean up
-- *8/27 left image coming from database big so I can work to handle lag
+- 9/1 - 9/29 Mom passed away
+- 9/30 Fixed routing issue where not acting like SPA
+- 10/12 Major clean-up
 
 
 ## To do
 
+- Figure out why lighthouse giving lower score after cleanup
 
-- Added firebase database so I can change home page text, did but not to handle picture coming in
+- Workbox error 
 
-- Make two webpack configs 
+- Service worker not updating 
 
-
-## AppShell (Currently Focus)
-
-- Overall reusable component that handles routing, drawer, and app header
-
-
-### AppShell To Do
-
-- Be able to pass in pages (works but need to import dynamically) and styling  
-
-- ~~Getting kind of big, pull apart and make AppToolbar Component~~
-
-- Figure out isMounted (memory leak)
-
+- Home grid
 
 
 ## Lego 
@@ -50,31 +40,9 @@ Overall, this will be a work in progress while I am honing my skills.
 - Handles receiving 404 from API
 
 
-### Lego To Do (in "free time")
 
-- Overall, I feel it gets the point across
- 
-- Need to streamline translateCharOptions and updateCharacter functions
- 
-- SVGs need to be tweaked to clean-up CSS and make this section more responsive
- 
-- Clean up CSS
- 
-- ~~componentDidMount running when drawer open?
-
-
-
-## Chat (Work in Progress focused on AppShell)
+## Chat
 
 - Showcases working Firebase Login and Firebase Realtime Database
-
-
-### Chat to Do (Lots)
-
-- Need to make it look pretty 
-
-- Be able to have separate Chats with different users
-
-- Be able to notify me if someone starts a Chat
 
 

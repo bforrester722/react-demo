@@ -1,7 +1,6 @@
 import React     from 'react';
 import ReactDOM  from 'react-dom';
 import {Router}   from 'react-router-dom';
-import {Workbox} from 'workbox-window';
 import history   from './history';
 import App       from './App';
 import './styles.css';
@@ -17,7 +16,7 @@ ReactDOM.render(
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("./firebase-messaging-sw.js")
+    .register("./sw.js")
     .then(function(registration) {
       console.log("Registration successful, scope is:", registration.scope);
     })
@@ -26,4 +25,4 @@ if ("serviceWorker" in navigator) {
     });
 }
 
-module.hot.accept();
+// module.hot.accept();

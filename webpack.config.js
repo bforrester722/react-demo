@@ -6,6 +6,9 @@ const BrotliPlugin         = require('brotli-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin           = require('copy-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const withReport = process.env.npm_config_withReport;
 
@@ -74,12 +77,12 @@ module.exports = {
     },
     plugins: [
       withReport ? new BundleAnalyzerPlugin() : '',
-      new BrotliPlugin({
-         asset: '[path].br[query]',
-         test: /\.js$|\.css$|\.html$/,
-         threshold: 10240,
-         minRatio: 0.8
-      }),
+      // new BrotliPlugin({
+      //    asset: '[path].br[query]',
+      //    test: /\.js$|\.css$|\.html$/,
+      //    threshold: 10240,
+      //    minRatio: 0.7
+      // }),
       new CopyPlugin({
         patterns: [
           { from: 'public', to: './' }
@@ -92,6 +95,20 @@ module.exports = {
       new CleanWebpackPlugin()
       
     ],
+
+    optimization: {
+      minimizer: [
+
+        new TerserPlugin({
+          // Use multi-process parallel running to improve the build speed
+          // Default number of concurrent runs: os.cpus().length - 1
+          parallel: true,
+          // Enable file caching
+          cache: true,
+          // sourceMap: true,
+        }),
+      ],
+    },
     // devtool: 'source-map',
     devServer: {
       contentBase: './dist',

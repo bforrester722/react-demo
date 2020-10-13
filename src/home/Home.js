@@ -1,15 +1,9 @@
 import React, {Component, lazy, Suspense} from 'react';
 import {Link} from 'react-router-dom';
-import Lottie from 'react-lottie-light';
-import {wait} from '../helpers/utils';
-// cant lazy load lottie animations
-import chatAnimation    from '../animations/chat test.json';
-import reactAnimation   from '../animations/react2.json';
-import scoresAnimation  from '../animations/scores.json'
 import './home.css';
 
 const LazyLoad = lazy(() => import('react-lazyload'));
-
+const LazyLottie = lazy(() => import('../components/LazyLottie'));
 
 export default class HomePage extends Component {
 
@@ -19,21 +13,13 @@ export default class HomePage extends Component {
   }
 
   state = {
-    chatAnimation:   chatAnimation,
-    reactAnimation:  reactAnimation,
-    scoresAnimation: scoresAnimation,
     dimensions:      '150px',
-    isPaused:        true,
   }
 
 
   async componentDidMount() {
 
     this._isMounted = true;
-    // import vader animation for code splitting (smaller bundle size)
-    import('../animations/vader.json').then(vaderAnimation => {
-      this.setState({ vaderAnimation })
-    })
 
     // checks screen width to set lottie dimensions
     this.checkWidth = () => {
@@ -51,17 +37,8 @@ export default class HomePage extends Component {
     };
 
     this.checkWidth();
-    this.setPause();
     window.addEventListener("resize", this.checkWidth);
  
-  }
-
-  // Pause video for 500ms then plays
-  async setPause() {
-    // await wait(500);
-    this._isMounted && this.setState({
-      isPaused: false
-    })
   }
 
 
@@ -70,19 +47,6 @@ export default class HomePage extends Component {
     window.removeEventListener("resize", this.checkWidth);
   }
 
-  // sets up lottie animations
-  lottieOptions(animation)  {
-    if (animation === 'reactAnimation') {
-      return {
-        loop: false,
-        animationData: this.state[animation],
-      }
-    }
-    return {
-      loop: true,
-      animationData: this.state[animation],
-    }
-  };
 
   // sets width of react demo animation
   setReactDimensions() {
@@ -107,13 +71,11 @@ export default class HomePage extends Component {
 
         <div className="img-animation-wrapper"> 
           <div id="react-lottie-wrapper" >
-            <LazyLoad height={this.setReactDimensions()} >
-              <Lottie isPaused={this.state.isPaused}
-                      speed={1}
-                      options={this.lottieOptions('reactAnimation')}
-                      height={this.setReactDimensions()}
-                      width={this.setReactDimensions()}/>
-            </LazyLoad>
+            <LazyLottie height={this.setReactDimensions()}
+                        loop={false}
+                        options={'react2'}
+                        speed={1}
+                        width={this.setReactDimensions()}/>
           </div>
         </div>
     
@@ -128,12 +90,10 @@ export default class HomePage extends Component {
         <div className="home-grid">
           
           <section className="section-wrapper"> 
-            <LazyLoad height={this.state.dimensions} offset={-200}>
-            <Lottie options={this.lottieOptions('vaderAnimation')}
-                    height={this.state.dimensions}
-                    speed= {.6}
-                    width={this.state.dimensions}/>
-            </LazyLoad>
+            <LazyLottie height={this.state.dimensions}
+                        options={'vader'}
+                        speed= {.6}
+                        width={this.state.dimensions}/>
             <Link to="/Lego" className="link"><h2>Lego</h2></Link>
             <ul>
               <li>Fetches a random Star Wars character from https://swapi.dev/ </li>
@@ -144,12 +104,10 @@ export default class HomePage extends Component {
           </section>
           
           <section className="section-wrapper">
-            <LazyLoad height={this.state.dimensions} offset={-200}>
-              <Lottie options={this.lottieOptions('chatAnimation')}
-                      height={this.state.dimensions}
-                      speed= {.9}
-                      width={this.state.dimensions +32}/>
-            </LazyLoad>
+            <LazyLottie options={'chat test'}
+                        height={this.state.dimensions}
+                        speed= {.9}
+                        width={this.state.dimensions +32}/>
       
             <h2><Link to="/Chat" className="link">Chat</Link></h2>         
             <ul>
@@ -159,13 +117,10 @@ export default class HomePage extends Component {
           </section>
 
           <section className="section-wrapper">
-            <LazyLoad height={this.state.dimensions} offset={-200}>
-              <Lottie options={this.lottieOptions('scoresAnimation')}
-                      height={this.setLighthouseDimensions('height')}
-                      speed= {.9}
-                      width={this.setLighthouseDimensions('width')}/>
-            </LazyLoad>
-    
+            <LazyLottie options={'scores'}
+                        height={this.setLighthouseDimensions('height')}
+                        speed= {.9}
+                        width={this.setLighthouseDimensions('width')}/>
             <h2 className="home-header">Mobile Lighthouse Scores</h2>         
             <ul>
               <li>Google Lighthouse is an open-source, automated tool for measuring the quality of web pages</li>

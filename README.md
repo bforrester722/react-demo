@@ -12,11 +12,10 @@ Overall, this will be a work in progress while I am honing my skills.
 - 9/1 - 9/29 Mom passed away
 - 9/30 Fixed routing issue where not acting like SPA
 - 10/12 Major clean-up
+- 10/12a Made LazyLottie component to lazt load lottie animations
 
 
 ## To do
-
-- Figure out why lighthouse giving lower score after cleanup
 
 - Workbox error 
 

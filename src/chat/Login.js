@@ -72,21 +72,25 @@ export default class Login extends Component {
           <div>If you want to chat with someone they can use testingChat2@asdf.com and password.</div>
           <h4>Email: testingChat@asdf.com</h4>
           <h4>Password: password</h4>
-      
-          <input className="form-control"
-                 placeholder="testingChat@asdf.com"
-                 name="email"
-                 type="email"
-                 onChange={this.handleChange}
-                 value={this.state.email}/>
+          <label>
+            Enter Email:
+            <input className="form-control"
+                   placeholder="testingChat@asdf.com"
+                   name="email"
+                   type="email"
+                   onChange={this.handleChange}
+                   value={this.state.email}/>
+          </label>
    
-          <input className="form-control"
-                 placeholder="password"
-                 name="password"
-                 onChange={this.handleChange}
-                 value={this.state.password}
-                 type="password"/>
-      
+          <label>
+            Enter Password:
+            <input className="form-control"
+                   placeholder="password"
+                   name="password"
+                   onChange={this.handleChange}
+                   value={this.state.password}
+                   type="password"/>
+          </label>
           {this.state.error ? (<p className="error-txt">{this.state.error}</p>) : null}
           <button className="btn" type="submit">Login</button>
 

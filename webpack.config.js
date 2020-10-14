@@ -88,6 +88,10 @@ module.exports = {
           { from: 'public', to: './' }
         ],
       }),
+      new InjectManifest({
+        swSrc: "./src/sw.js",
+        swDest: "sw.js"
+      }),
       new HtmlWebpackPlugin({
         template: "./public/index.html",
         filename: "./index.html"

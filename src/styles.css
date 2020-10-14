@@ -51,7 +51,7 @@ ul {
   background-color: var(--app-primary-color);
   text-decoration:  none;
   margin:           16px;
-  color:            #FFF;
+  color:            black;
   padding:          12px;
   min-width:        120px;
   border-radius:    8px;

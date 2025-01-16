@@ -1,18 +1,27 @@
-// initializes firebase
-import * as firebase from "firebase/app";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBjY6onLLdfafUoorom7fTe8DIWjH3a1kc",
-  authDomain: "forr-resume.firebaseapp.com",
-  databaseURL: "https://forr-resume.firebaseio.com",
-  projectId: "forr-resume",
-  storageBucket: "forr-resume.appspot.com",
-  messagingSenderId: "11796930144",
-  appId: "1:11796930144:web:57d589c7f7880fd84d6d05",
-  measurementId: "G-SGL0VEC8TL"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-const initializedFirebaseApp = firebase.initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-export {firebase};
+// Firebase services
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+const db = getDatabase(app);
 
+// Export initialized services
+export { app, auth, firestore, db };

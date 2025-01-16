@@ -1,129 +1,114 @@
-import React, {Component, lazy} from 'react';
+import React, { lazy, useState, useEffect } from "react";
 import {
+  Routes,
   Route,
-  Router,
-  Switch,
-  Redirect,
-  withRouter,
-} from 'react-router-dom';
-import {auth}   from '../firebase/auth';
-import {Helmet} from 'react-helmet';
-import history  from '../history';
- 
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { Helmet } from "react-helmet";
+
 // Lazy components
-const AppToolbar  = lazy(() => import('./AppToolbar'));
-const CssBaseline = lazy(() => import('@material-ui/core/CssBaseline'));
+const AppToolbar = lazy(() => import("./AppToolbar"));
+const CssBaseline = lazy(() => import("@mui/material/CssBaseline"));
 
 // Lazy Pages
-const Home    = lazy(() => import('../home/Home'));
-const Chat    = lazy(() => import('../chat/Chat'));
-const Login   = lazy(() => import('../chat/Login'));
-const Signup  = lazy(() => import('../chat/Signup'));
-const Lego    = lazy(() => import('../lego/Lego'));
+const Home = lazy(() => import("../home/Home"));
+const Chat = lazy(() => import("../chat/Chat"));
+const Planner = lazy(() => import("../planner/Planner"));
+const Login = lazy(() => import("../chat/Login"));
+const Signup = lazy(() => import("../chat/Signup"));
+const Lego = lazy(() => import("../lego/Lego"));
 
+const AppShell = ({ pages }) => {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [headerTitle, setHeaderTitle] = useState("Home");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-class AppShell extends Component {
-
-  state = {
-    authenticated: false,
-    headerTitle:   'Home'
-  }
-
-  // When firebase log in status changed update authenticated
-  componentDidMount() {
-    auth().onAuthStateChanged(async user => {
-      if (user) {
-        this.setState ( { 
-          authenticated: true,
-        })
-      } 
-      else {
-         this.setState ( { 
-          authenticated: false,
-        })
-      }
+  // Listen to Firebase auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("user", user);
+      setAuthenticated(!!user);
     });
-  }
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
 
-  // updates document title on page change
-  handlePageChange = (title) => {
-    this.setState(prev => {
-      if (prev.headerTitle === title) {
-        return;
-      }
-      return { headerTitle: title }
-    });
-  }
-
-  // updates history when link clicked in AppToolbar drawer for navagation
-  handleDrawerLinkClicked = (link) => {
-    const {pathname} = this.props.location;
-    if (pathname === link) { return; }
-    this.props.history.push(link);
-  }
-    
-
-  render() {
-
-    const {pages}      = this.props;
-    const {authenticated, headerTitle} = this.state;
-
-    // If user logged in go to chat else to login page
-    function PrivateRoute({ component: Component, authenticated, ...rest}) {
-      return (
-        <Route
-          {...rest}
-          render={(props) => authenticated === true
-          ? <Component {...props}  /> : <Redirect to="/login" />}
-        /> 
-      )
+  // Update the document title on page change
+  const handlePageChange = (title) => {
+    if (headerTitle !== title) {
+      setHeaderTitle(title);
     }
+  };
 
-    // TODO temporary function need to fix
-    // prevents auto redirect to chat if user is signed in if trying to view home or lego
-    const PublicRoute = ({ component: Component, authenticated, ...rest }) => {
-      const {pathname} = window.location;
-      return (
-        <Route
-          {...rest}
-          render={(props) => authenticated === false || pathname === '/Lego' || pathname === '/Home'
-            ? <Component {...props} onHeaderTitle={this.handlePageChange}/>
-            : <Redirect to={{ pathname: '/chat',  }} />}
-        />
-      )
+  // Navigate to the selected link
+  const handleDrawerLinkClicked = (link) => {
+    if (location.pathname !== link) {
+      navigate(link);
     }
+  };
 
-
-    return (
-      <div>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{headerTitle}</title>
-          <link rel="canonical" href={`https://forr-resume.web.app/${headerTitle}`} />
-          <meta name="description" content="Ben Forrester's React demo page" />
-        </Helmet>
-
-        <AppToolbar pages={pages} 
-                    onDrawerLinkClicked={this.handleDrawerLinkClicked}/>
-        <main >
-          <Router history={history}>
-            <Switch>
-              <PublicRoute exact path="/home" authenticated={authenticated} component={Home}></PublicRoute>
-              <PrivateRoute path="/chat" authenticated={authenticated} component={() => <Chat authenticated={authenticated} onHeaderTitle={this.handlePageChange} />}></PrivateRoute>
-              <PublicRoute path="/signup"  authenticated={authenticated} component={Signup}></PublicRoute>
-              <PublicRoute path="/login" authenticated={authenticated} component={Login}></PublicRoute>
-              <PublicRoute path="/lego" authenticated={authenticated} component={Lego}></PublicRoute>
-              <Redirect to="/home" />
-            </Switch>
-          </Router>
-          <CssBaseline /> 
-        </main>
-      </div>
-
+  // Private route wrapper
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    return authenticated ? (
+      <Component {...rest} />
+    ) : (
+      <Navigate to="/login" replace />
     );
+  };
 
-  }
+  // Public route wrapper
+  const PublicRoute = ({
+    component: Component,
+    restrictedToPublic,
+    ...rest
+  }) => {
+    if (authenticated && restrictedToPublic) {
+      return <Navigate to="/chat" replace />;
+    }
+    return <Component {...rest} onHeaderTitle={handlePageChange} />;
+  };
 
-}
+  return (
+    <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{headerTitle}</title>
+        <link
+          rel="canonical"
+          href={`https://forr-resume.web.app/${headerTitle}`}
+        />
+        <meta name="description" content="Ben Forrester's React demo page" />
+      </Helmet>
 
-export default withRouter(AppShell);
+      <AppToolbar pages={pages} onDrawerLinkClicked={handleDrawerLinkClicked} />
+
+      <main>
+        <Routes>
+          <Route path="/home" element={<PublicRoute component={Home} />} />
+          <Route
+            path="/planner"
+            element={<PublicRoute component={Planner} />}
+          />
+          <Route path="/chat" element={<PrivateRoute component={Chat} />} />
+          <Route
+            path="/signup"
+            element={<PublicRoute component={Signup} restrictedToPublic />}
+          />
+          <Route
+            path="/login"
+            element={<PublicRoute component={Login} restrictedToPublic />}
+          />
+          <Route path="/lego" element={<PublicRoute component={Lego} />} />
+          <Route path="*" element={<Navigate to="/planner" replace />} />
+        </Routes>
+        <CssBaseline />
+      </main>
+    </div>
+  );
+};
+
+export default AppShell;

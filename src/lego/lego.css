@@ -1,46 +1,47 @@
 .lego-page {
   background-color: black;
-  min-height:       100vh;
-  padding-top:      64px;
-  overflow:         hidden;
+  min-height: 100vh;
+  padding-top: 64px;
+  overflow: hidden;
 }
 
 .lego-info-wrapper {
-  display:               grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 .minifigure-wrapper {
   grid-row: span 2;
-  margin:   auto;
+  margin: auto;
 }
 
 .textIn {
-  opacity:              1;
-  animation:            zoomInDown .75s ease-in-out,  glow 1s ease-in-out infinite alternate ;
-  animation-fill-mode:  forwards;
-  color:                #61dafb;
+  opacity: 1;
+  animation: zoomInDown 0.75s ease-in-out,
+    glow 1s ease-in-out infinite alternate;
+  animation-fill-mode: forwards;
+  color: #61dafb;
 }
 
 .minifigure-name {
   text-align: center;
-  height:     23px;
-  margin:     16px 0px -24px;
+  height: 23px;
+  margin: 16px 0px -24px;
 }
 
 @keyframes zoomInDown {
   from {
-    opacity:                    0;
-    transform:                  scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);
-    animation-timing-function:  cubic-bezier(0.55, 0.055, 0.675, 0.19);
-    text-shadow:                2px 2px 1px #e442fc, 2px 2px 2px #e442fc;
+    opacity: 0;
+    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    text-shadow: 2px 2px 1px #e442fc, 2px 2px 2px #e442fc;
   }
 
   60% {
-    opacity:                    1;
-    transform:                  scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);
-    animation-timing-function:  cubic-bezier(0.175, 0.885, 0.32, 1);
-    text-shadow:                2px 2px 4px #e442fc, 2px 2px 5px #e442fc;
+    opacity: 1;
+    transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+    text-shadow: 2px 2px 4px #e442fc, 2px 2px 5px #e442fc;
   }
 }
 
@@ -48,95 +49,95 @@
   from {
     text-shadow: 2px 2px 1px #e442fc, 2px 2px 2px #e442fc;
   }
-  
+
   to {
     text-shadow: 2px 2px 4px #e442fc, 2px 2px 5px #e442fc;
   }
 }
 
 .minifigure {
-  display:        flex;
+  display: flex;
   flex-direction: column;
-  align-items:    center;
-  width:          calc(100vw / 2 - 16px);
-  transition:     transform 400ms cubic-bezier(0,0,0,1.25);
-  margin-bottom:  -32px;
+  align-items: center;
+  width: calc(100vw / 2 - 16px);
+  transition: transform 400ms cubic-bezier(0, 0, 0, 1.25);
+  margin-bottom: -32px;
 }
 
 .opacity-transition {
-  transition: opacity 600ms cubic-bezier(0,0,0,1.25);
+  transition: opacity 600ms cubic-bezier(0, 0, 0, 1.25);
 }
 
 /* Head */
 .head {
-  transition: transform 400ms cubic-bezier(0,0,0,1.25);
-  z-index:    3;
-  position:   relative;
+  transition: transform 400ms cubic-bezier(0, 0, 0, 1.25);
+  z-index: 3;
+  position: relative;
 }
 
-.hairs  {
-  transition: transform 400ms ;
+.hairs {
+  transition: transform 400ms;
 }
 
 .hair-wrap {
-  overflow:   hidden;
-  width:      239px;
-  position:   absolute;
-  transform:  translate(-29%, -118%);
-  z-index:    1;
+  overflow: hidden;
+  width: 239px;
+  position: absolute;
+  transform: translate(-29%, -118%);
+  z-index: 1;
 }
 
 .hair-styles {
-  display:    flex;
-  transition: transform 400ms cubic-bezier(0,0,0,1.25);
+  display: flex;
+  transition: transform 400ms cubic-bezier(0, 0, 0, 1.25);
   height: 200px;
 }
 
 .hair-style {
   position: relative;
-  flex:     1 0 100%;
-  filter:   drop-shadow(0px 1px 1px black);
+  flex: 1 0 100%;
+  filter: drop-shadow(0px 1px 1px black);
 }
 
 /*Face*/
 .faces-wrap {
   overflow: hidden;
   position: absolute;
-  top:      16px;
-  width:    100px;
-  filter:   brightness(78%);
+  top: 16px;
+  width: 100px;
+  filter: brightness(78%);
 }
 
 .faces {
-  display:    flex;
-  transition: transform 400ms cubic-bezier(0,0,0,1.25);
+  display: flex;
+  transition: transform 400ms cubic-bezier(0, 0, 0, 1.25);
 }
 
 .face {
-  position:  relative;
-  flex:      1 0 100%;
+  position: relative;
+  flex: 1 0 100%;
   font-size: 14px;
 }
 
 /*Body*/
 .bodies-wrap {
   overflow: hidden;
-  margin:   -88px 0px -93px;
-  width:    295px;
-  top:      167px;
-  z-index:  1;
+  margin: -88px 0px -93px;
+  width: 295px;
+  top: 167px;
+  z-index: 1;
 }
 
 .bodies {
-  display:      flex;
-  transition:   transform 400ms ;
-  height:       224px;
-  margin-left:  6px;
+  display: flex;
+  transition: transform 400ms;
+  height: 224px;
+  margin-left: 6px;
 }
 
 .body {
   position: relative;
-  flex:     1 0 100%;
+  flex: 1 0 100%;
 }
 
 /*Legs*/
@@ -147,24 +148,23 @@
 }
 
 .legs {
-  display:    flex;
-  transition: transform 400ms cubic-bezier(0,0,0,1.25);
+  display: flex;
+  transition: transform 400ms cubic-bezier(0, 0, 0, 1.25);
 }
 
 .leg {
   position: relative;
-  flex:     1 0 100%;
-  height:   200px;
+  flex: 1 0 100%;
+  height: 200px;
 }
-
 
 /*Controls Section*/
 .controls {
-  width:            100%;
-  max-width:        400px;
-  color:            #333;
-  text-transform:   uppercase;
-  background-color: rgba(220,220,220,0.3);
+  width: 100%;
+  max-width: 400px;
+  color: #333;
+  text-transform: uppercase;
+  background-color: rgba(220, 220, 220, 0.3);
 }
 
 .controls fieldset {
@@ -173,42 +173,41 @@
 }
 
 .controls label {
-  display:        block;
-  font-size:      x-small;
+  display: block;
+  font-size: x-small;
   letter-spacing: 0.0625em;
 }
 
 .controls input[type="range"] {
-  -webkit-appearance: none; 
-  appearance:         none;
-  position:           relative;
-  width:              100%;
-  height:             2em;
-  padding:            0.375em;
-  margin:             0.25rem 0 1rem;
-  border-radius:      1em;
-  outline:            none;
-
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 100%;
+  height: 2em;
+  padding: 0.375em;
+  margin: 0.25rem 0 1rem;
+  border-radius: 1em;
+  outline: none;
 }
 
 .controls input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; 
-  appearance:         none;
-  position:           relative;
-  width:              1.5em;
-  height:             1.5em;
-  background-color:   var(--app-accent-color);
-  border-radius:      50%;
-  cursor:             pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: var(--app-accent-color);
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .controls input[type="range"]::-moz-range-thumb {
-  position:         relative;
-  width:            1.5em;
-  height:           1.5em;
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
   background-color: #333;
-  border-radius:    50%;
-  cursor:           pointer;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .controls input[type="range"]::-moz-range-track {
@@ -219,7 +218,6 @@
   background-color: lightgrey;
 }
 
-
 /*Stats section*/
 .lego-stats-grid {
   display: grid;
@@ -227,11 +225,10 @@
   padding: 16px;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 16px;
-
 }
 
 .stat-wrapper {
-  display:         flex;
+  display: flex;
   justify-content: space-between;
 }
 
@@ -239,11 +236,9 @@
   color: white;
 }
 
-
 @media only screen and (min-width: 700px) and (min-height: 500px) {
-  
   .minifigure-wrapper {
-     transform: scale(1.5);
+    transform: scale(1.5);
   }
 
   .minifigure {
@@ -259,8 +254,7 @@
     max-width: 400px;
   }
 
-
   .stat-wrapper {
-      font-size: 20px;
+    font-size: 20px;
   }
-}  
+}

@@ -1,94 +1,105 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { signup, signInWithGoogle, signInWithFacebook} from "../helpers/login";
-import './chat.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { signup, signInWithGoogle, signInWithFacebook } from "../helpers/login";
+import "./chat.css";
 
-export default class SignUp extends Component {
-  constructor() {
-    super();
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
+const SignUp = ({ onHeaderTitle }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  state = {
-    error: null,
-    email: '',
-    password: '',
+  // Set the page title when the component mounts
+  useEffect(() => {
+    if (onHeaderTitle) {
+      onHeaderTitle("Sign Up");
+    }
+  }, [onHeaderTitle]);
+
+  // Handle changes to the input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
+    }
   };
 
-  // sets page title
-  componentDidMount() {
-    this.props.onHeaderTitle('Sign Up');  
-  }
-
-  // handles changes to email and password inputs
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
-   // Handles firebase sign up with email and password
-  async handleSubmit(event){
-    event.preventDefault();
-    this.setState({ error: '' });
+  // Handle sign-up with email and password
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
     try {
-      await signup(this.state.email, this.state.password);
-    } catch (error) {
-      this.setState({ error: error.message });
+      await signup(email, password);
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
 
-  // Handles firebase sign up with Google
-  async googleSignIn() {
+  // Handle Google sign-up
+  const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-    } catch (error) {
-      this.setState({ error: error.message });
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
 
-  // Handles firebase sign up with Facebook
-  async facebookSignIn() {
+  // Handle Facebook sign-up
+  const handleFacebookSignIn = async () => {
     try {
       await signInWithFacebook();
-    } catch (error) {
-      console.log(error)
-      this.setState({ error: error.message });
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
 
-  render() {
-    return (
-  
-      <div className="content">
+  return (
+    <div className="content">
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <p>Fill in the form below to create an account.</p>
+        <div>
+          <input
+            className="form-control"
+            placeholder="Email"
+            name="email"
+            type="email"
+            onChange={handleChange}
+            value={email}
+          />
+        </div>
+        <div>
+          <input
+            className="form-control"
+            placeholder="Password"
+            name="password"
+            type="password"
+            onChange={handleChange}
+            value={password}
+          />
+        </div>
+        <div>
+          {error && <p className="error-txt">{error}</p>}
+          <button className="btn" type="submit">
+            Sign up
+          </button>
+        </div>
+        <p>You can also sign up with any of these services</p>
+        <div className="btn-wrapper">
+          <button className="btn" type="button" onClick={handleGoogleSignIn}>
+            Sign up with Google
+          </button>
+          <button className="btn" type="button" onClick={handleFacebookSignIn}>
+            Sign up with Facebook
+          </button>
+        </div>
+        <hr />
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </form>
+    </div>
+  );
+};
 
-        
-          <form className="signup-form" onSubmit={this.handleSubmit} >
-            <p>Fill in the form below to create an account.</p>
-            <div>
-              <input className="form-control" placeholder="Email" name="email" type="email" onChange={this.handleChange} value={this.state.email}></input>
-            </div>
-            <div>
-              <input className="form-control" placeholder="Password" name="password" onChange={this.handleChange} value={this.state.password} type="password"></input>
-            </div>
-            <div>
-              {this.state.error ? <p className="error-txt">{this.state.error}</p> : null}
-              <button className="btn" type="submit">Sign up</button>
-            </div>
-            <p>You can also sign up with any of these services</p>
-            <div className="btn-wrapper">
-              <button className="btn" type="button" onClick={this.googleSignIn}>
-                Sign up with Google
-              </button>
-              <button className="btn" type="button" onClick={this.facebookSignIn}>
-                Sign up with Facebook
-              </button>
-            </div>
-            <hr></hr>
-            <p>Already have an account? <Link to="/login">Login</Link></p>
-          </form>
-      
-      </div>
-    )
-  }
-}
+export default SignUp;

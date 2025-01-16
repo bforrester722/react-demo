@@ -1,11 +1,9 @@
-
 /*to update font-sixe of links in app drawer*/
 .MuiTypography-body1 {
-	font-size: 32px !important;
-	color: #61dafb;
+  /* font-size: 32px !important; */
+  color: #61dafb;
   animation: glow 1s ease-in-out infinite alternate;
 }
-
 
 @keyframes glow {
   from {
@@ -16,15 +14,9 @@
   }
 }
 
-@media screen and (min-width:768px) { 
-
-  .MuiTypography-body1 {
+@media screen and (min-width: 768px) {
+  /* .MuiTypography-body1 {
     font-size: 48px !important;
 
-  }
+  } */
 }
-
-
-
-
-

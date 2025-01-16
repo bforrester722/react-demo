@@ -15,7 +15,7 @@ const Planner = () => {
           variant="contained"
           sx={{ mb: 2 }}
         >
-          Add Task
+          Add Task w
         </Button>
         {isEditing && (
           <TaskEditor onClose={() => setIsEditing(false)} currentTask={null} />

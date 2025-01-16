@@ -1,52 +1,46 @@
-import React, {Component, lazy} from 'react';
-import Lottie from 'react-lottie-light';
+import React, { useState, useEffect } from "react";
+import { Suspense } from "react";
+import Lottie from "lottie-light-react";
 
-const LazyLoad = lazy(() => import('react-lazyload'));
-class LazyLottie extends Component {
+const LazyLottie = ({ options, width, height, speed, isPaused, loop }) => {
+  const [animation, setAnimation] = useState(null);
 
-  constructor(props) {
-    super(props);
+  // Load animation JSON dynamically when the component mounts
+  useEffect(() => {
+    const loadAnimation = async () => {
+      try {
+        const animationData = await import(`../animations/${options}.json`);
+        setAnimation(animationData.default || animationData); // Handle default export
+      } catch (error) {
+        console.error("Error loading animation:", error);
+      }
+    };
+
+    loadAnimation();
+  }, [options]); // Re-run if `options` prop changes
+
+  // If animation data isn't loaded yet, render a placeholder or loader
+  if (!animation) {
+    return <div style={{ width, height, textAlign: "center" }}>Loading...</div>;
   }
 
-  state = {
-    animation: ''
-  }
+  return (
+    <Lottie
+      animationData={animation} // Provide loaded animation data
+      loop={loop} // Enable or disable looping
+      speed={speed} // Animation playback speed
+      play={!isPaused} // Whether to play or pause the animation
+      style={{ width, height }} // Apply width and height as inline styles
+    />
+  );
+};
 
-  // imports animation
-  componentDidMount() {
-    const {options} = this.props;
-    import(`../animations/${options}.json`).then(animation => {
-      this.setState({ animation })
-    })
-  }
+const LazyLottieWrapper = (props) => {
+  return (
+    <Suspense fallback={<div>Loading animation...</div>}>
+      <LazyLottie {...props} />
+    </Suspense>
+  );
+};
 
-  // sets up lottie animations
-  lottieOptions(loop)  {
-    return {
-      animationData:  this.state.animation,
-      loop:           loop,
-    }
-  };
-    
-
-  render() {
-
-    const {width, height, speed, isPaused, loop, options}      = this.props;
-
-
-    return (
-     <LazyLoad height={height} offset={-200}>
-        <Lottie isPaused={false}
-                speed={speed}
-                options={this.lottieOptions(loop)}
-                height={height}
-                width={width}/>
-      </LazyLoad>
-
-    );
-
-  }
-
-}
-
-export default LazyLottie;
+export default LazyLottieWrapper;

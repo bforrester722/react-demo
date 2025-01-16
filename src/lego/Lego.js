@@ -1,331 +1,273 @@
-import React, { Component, lazy, Suspense } from 'react';
-import {wait} from '../helpers/utils';
-import vader from './vader.mp3'
-import './lego.css';
-import './faces.css';
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import { wait } from "../helpers/utils";
+import { Button } from "@mui/material";
+import vader from "./vader.mp3";
+import "./lego.css";
+import "./faces.css";
 
-const Hair = lazy(() => import('./Hair'));
-const Face = lazy(() => import('./Face'));
-const Body = lazy(() => import('./Body'));
-const Legs = lazy(() => import('./Legs'));
+const Hair = lazy(() => import("./Hair"));
+const Face = lazy(() => import("./Face"));
+const Body = lazy(() => import("./Body"));
+const Legs = lazy(() => import("./Legs"));
 
-const renderLoader = () => <p>Loading</p>;
+const renderLoader = () => <p>Loading...</p>;
 
-export default class Lego extends Component {
-  
-  constructor() {
-    super();
-    this.handleRandCharClick  = this.handleRandCharClick.bind(this);
-  }
+const Lego = ({ onHeaderTitle }) => {
+  const [body, setBody] = useState(0);
+  const [character, setCharacter] = useState({ name: "...Loading" });
+  const [face, setFace] = useState(0);
+  const [hair, setHair] = useState(0);
+  const [leg, setLeg] = useState(0);
+  const [opacity, setOpacity] = useState(".5");
+  const [textIn, setTextIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  _isMounted = false;
-
-  state = {
-    body:       0,
-    character:  {name: "...Loading"},
-    face:       0,
-    hair:       0,
-    leg:        0,
-    opacity:    '.5',
-    // corrects colors coming from API
-    colorCorrections: {
-      auburn:       '#922724',
-      black:        '#232323',
-      blond:        'gold',
-      blonde:       'gold',
-      brown:        'saddlebrown',
-      dark:         '#42210B',
-      fair:         'bisque',
-      hazel:        'radial-gradient(yellow, #594c26 )',
-      light:        'navajowhite',
-      metal:        'silver',
-      pale:         'bisque',
-      unknown:      'brown',
-      white:        '#ddd6de',
-      none:         'saddlebrown',
-      'green-tan':  'green'
-    },
+  const colorCorrections = {
+    auburn: "#922724",
+    black: "#232323",
+    blond: "gold",
+    blonde: "gold",
+    brown: "saddlebrown",
+    dark: "#42210B",
+    fair: "bisque",
+    hazel: "radial-gradient(yellow, #594c26 )",
+    light: "navajowhite",
+    metal: "silver",
+    pale: "bisque",
+    unknown: "brown",
+    white: "#ddd6de",
+    none: "saddlebrown",
+    "green-tan": "green",
   };
 
+  useEffect(() => {
+    onHeaderTitle("Lego");
+    fetchRandomCharacter();
+  }, []); // Run on mount only
 
+  useEffect(() => {
+    translateCharOptions();
+  }, [face, hair, body, leg]);
 
-  // fetch random starwars char when ready
-  componentDidMount() {
-    this._isMounted = true;
-    this.props.onHeaderTitle('Lego');  
-    this.fetchRandomCharacter();
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  // gets new random character when btn clicked
-  async handleRandCharClick() {
-    await this.setState({
-      body:       0,
-      character:  {name: "...Loading"},
-      face:       0,
-      hair:       0,
-      leg:        0,
-      opacity:    '.5',
-      textIn:     false
-    })
-    this.translateCharOptions();
-    this.fetchRandomCharacter();
-  }
-
-  // random number for setting hair, face, and body
-  getRandomNum(min, max) {
+  const getRandomNum = (min, max) => {
     return Math.floor(Math.random() * (max - min) + min);
-  }
+  };
 
-  // fetch character from swapi.dev/api
-  fetchRandomCharacter() {
-    // 82
-    const rand = this.getRandomNum(1, 85);
-    fetch(`https://swapi.dev/api/people/${rand}/`)
-        .then(response => response.json())
-        .then(data => {
-          this.updateCharacter(data)
-        })
-  }
-
-  // updates character and runs animation to new values
-  async updateCharacter(char) {
-    await wait(750)
-    if (this._isMounted) {
-      if (char.name === 'Darth Vader') {
-        this.setVader(char);
-        return;
-      }
-      // if api return 404 show Goku
-      if (char.detail === 'Not found') {
-        this.setState({
-          body:       500,
-          character:  {
-            name: "Not Found ",
-            hair_color: 'blond',
-            skin_color: 'fair'
-          },
-          face:       500,
-          hair:       700,
-          leg:        500,
-          opacity:    '1',
-          textIn:     true
-        })
-      }
-      // sets random values for char
-      else {
-        const isBald = char.hair_color === 'none' || char.hair_color === 'n/a' ? true : false;
-        this.setState({
-          body:       this.getRandomNum(1, 4) * 100,
-          character:  char,
-          face:       this.getRandomNum(1, 5) * 100,
-          hair:       isBald ? 0 : this.getRandomNum(2, 6) * 100,
-          leg:        this.getRandomNum(1, 4) * 100,
-          opacity:    '1',
-          textIn:     true
-        })
-      }
-     this.translateCharOptions();
+  const fetchRandomCharacter = async () => {
+    setLoading(true);
+    setTextIn(false);
+    const rand = getRandomNum(1, 85);
+    try {
+      const response = await fetch(`https://swapi.dev/api/people/${rand}/`);
+      const data = await response.json();
+      updateCharacter(data);
+    } catch (error) {
+      console.error("Error fetching character:", error);
     }
-  }
+  };
 
+  const updateCharacter = async (char) => {
+    await wait(750);
+    if (char.name === "Darth Vader") {
+      setVader(char);
+      return;
+    }
 
-  setVader(char) {
-    this.setState({
-        body:       400,
-        character:  char,
-        face:       400,
-        hair:       600,
-        leg:        400,
-        opacity:    '1',
-        textIn:     true
-    })
-    this.translateCharOptions();
-    const audio = new Audio(vader)
+    if (char.detail === "Not found") {
+      setCharacter({
+        name: "Not Found",
+        hair_color: "blond",
+        skin_color: "fair",
+      });
+      setBody(500);
+      setFace(500);
+      setHair(700);
+      setLeg(500);
+      setOpacity("1");
+      setTextIn(true);
+    } else {
+      const isBald = char.hair_color === "none" || char.hair_color === "n/a";
+      setCharacter(char);
+      setBody(getRandomNum(1, 4) * 100);
+      setFace(getRandomNum(1, 5) * 100);
+      setHair(isBald ? 0 : getRandomNum(2, 6) * 100);
+      setLeg(getRandomNum(1, 4) * 100);
+      setOpacity("1");
+      setTextIn(true);
+    }
+    translateCharOptions();
+  };
+
+  const setVader = (char) => {
+    setCharacter(char);
+    setBody(400);
+    setFace(400);
+    setHair(600);
+    setLeg(400);
+    setOpacity("1");
+    setTextIn(true);
+    translateCharOptions();
+
+    const audio = new Audio(vader);
     audio.volume = 0.5;
-    audio.play()
-  }
+    audio.play();
+  };
 
-  // animates to random selected value
-  translateCharOptions() {
-    const featuresArray = [ 
-      {wrapper: 'hair-styles',  item: 'hair' },
-      {wrapper: 'faces',        item: 'face' },
-      {wrapper: 'bodies',       item: 'body' },
-      {wrapper: 'legs',         item: 'leg' }
+  const translateCharOptions = () => {
+    const featuresArray = [
+      { wrapper: "hair-styles", item: hair },
+      { wrapper: "faces", item: face },
+      { wrapper: "bodies", item: body },
+      { wrapper: "legs", item: leg },
     ];
 
-    featuresArray.forEach(feature => {
+    featuresArray.forEach((feature) => {
       const item = document.querySelector(`.${feature.wrapper}`);
-      item.style.transform = 'translateX(-' + this.state[feature.item] + '%)';
-    })
-
-  }
-
-  // sets feature based on slider
-  setFeature(event, stateName, className) {
-    this.setState({[stateName]: event.target.value});
-    var feature = document.querySelector(`.${className}`);
-    feature.style.transform = `translate(-${event.target.value}%, 0px)`;
+      if (item) {
+        item.style.transform = `translateX(-${feature.item}%)`;
+      }
+    });
+    setLoading(false);
   };
 
-  // raises and lowers head, legs, and hair
-  animateFeature(action) {
-    const {lower, raise} = action;
-    if (lower) {
-      const lowerLegs = document.querySelector(`.${lower}`);
-      lowerLegs.style.transform = `translateY(60px)`;
-      const face = document.querySelector('.faces');
-      this.setState({
-        cachedFace: face.style.transform
-      })
-      face.style.transform = `translateX(-600%)`;
-    }
-    if (raise) {
-      const raiseHead = document.querySelector(`.${raise}`);
-      raiseHead.style.transform = `translateY(-60px)`;
-    }
-  }
+  const getCorrectedColor = (color) => {
+    const removeMottle = color.replace("mottled", "").replace("mottle", "");
+    return colorCorrections[removeMottle] || removeMottle;
+  };
 
-  // resets animated features after use lets go of slider
-  async resetFeature(action) {
-    const {lower, raise} = action;
-    await wait(200);
-    if (lower) {
-      const lowerHead = document.querySelector(`.${lower}`);
-      lowerHead.style.transform = `translateY(0px)`;
-    }
-    if (raise) {
-      const raiseLegs = document.querySelector(`.${raise}`);
-      raiseLegs.style.transform = `translateY(0px)`;
-      const face = document.querySelector('.faces');
-      face.style.transform = this.state.cachedFace;
-    }
-  }
+  const getColor = (type) => {
+    const color = character[type];
+    if (!color) return "aqua";
 
-  // checks if color is in colorCorrections array and returns color
-  getCorrectedColor(color) {
-    const removeMottle = color.replace('mottled', '').replace('mottle', '');
-    const correctedColor = this.state.colorCorrections[removeMottle];
-    return correctedColor ? correctedColor : removeMottle;
-  }
+    if (color.includes(",")) {
+      const colorArr = color.split(",");
+      const getThirdColor = () => (colorArr[2] ? colorArr[2] : colorArr[0]);
 
-  // if color is area return corrected array otherwis return corrected color
-  getColor(type) {
-    const color = this.state.character[type];
-    if (!color) { return 'aqua'; }
-    if (color.indexOf(',') > -1) {
-      const colorArr = color.split(',');
-      const getThirdColor = () => {
-        return colorArr[2] ? colorArr[2] : colorArr[0]
-      }
       return {
-        color1: this.getCorrectedColor(colorArr[0]), 
-        color2: this.getCorrectedColor(colorArr[1]), 
-        color3: this.getCorrectedColor(getThirdColor())
-      }
+        color1: getCorrectedColor(colorArr[0]),
+        color2: getCorrectedColor(colorArr[1]),
+        color3: getCorrectedColor(getThirdColor()),
+      };
     }
-    return this.getCorrectedColor(color);
-  }
+    return getCorrectedColor(color);
+  };
 
-  // limits scale high and low
-  getDemision(multi) {
-    if (multi > .6 || !multi) {
-      return .6
-    }
-    return multi < .35 ? .35 : multi;
-  }
+  const getSize = () => {
+    const { height } = character;
+    if (!height) return { transform: "scale(.5)" };
 
-  // set scale based on height divided by average
-  getSize(char) {
-    const {height} = char;
-    if (!height ) {
-      return {transform: 'scale(.5)'}; 
-    }
-    const xMulti = height / 170 - .5;
-    const x = this.getDemision(xMulti)
-    return {transform: `scale(${x})`};
-  }
+    const xMulti = height / 170 - 0.5;
+    const x = Math.max(0.35, Math.min(0.6, xMulti));
+    return { transform: `scale(${x})` };
+  };
 
-
-
-  render() {
-    // deconstruct state so I don't have to use this.state everywhere 
-    // don't know if this is convention
-    const {body, character, hair, face, leg, opacity, textIn } = this.state;
-    const skinColor   = this.getColor('skin_color');
-    const hairColor   = this.getColor('hair_color');
-    const eyeColor    = this.getColor('eye_color');
-
-
-    return (
-   <Suspense fallback={renderLoader()}>
+  return (
+    <Suspense fallback={renderLoader()}>
       <div className="lego-page">
         <div className="lego-info-wrapper">
           <div className="minifigure-wrapper">
-            <h2 className={textIn ? 'textIn + minifigure-name' : 'minifigure-name'}>
-              {character.name}
+            <h2
+              className={
+                textIn ? "textIn + minifigure-name" : "minifigure-name"
+              }
+            >
+              {loading ? "Loading..." : character.name}
             </h2>
-            <div className="minifigure " style={this.getSize(character)}>
-
+            <div className="minifigure" style={getSize()}>
               <div className="head">
-                <Face skinColor={skinColor} eyeColor={eyeColor} opacity={opacity}/>
+                <Face
+                  skinColor={getColor("skin_color")}
+                  eyeColor={getColor("eye_color")}
+                  opacity={opacity}
+                />
                 <div className="hairs">
-                  <Hair hairColor={hairColor} skinColor={skinColor} opacity={opacity} />
+                  <Hair
+                    hairColor={getColor("hair_color")}
+                    skinColor={getColor("skin_color")}
+                    opacity={opacity}
+                  />
                 </div>
               </div>
-              <Body skinColor={skinColor} opacity={opacity}/>
+              <Body skinColor={getColor("skin_color")} opacity={opacity} />
               <div className="lower">
-                <Legs skinColor={skinColor} opacity={opacity}/>
+                <Legs skinColor={getColor("skin_color")} opacity={opacity} />
               </div>
             </div>
           </div>
 
           <div className="controls">
             <fieldset>
+              <div>
+                <label htmlFor="hair">
+                  Hair
+                  <input
+                    onChange={(event) => setHair(event.target.value)}
+                    name="hair"
+                    type="range"
+                    min="0"
+                    max="600"
+                    step="100"
+                    value={hair}
+                  />
+                </label>
+              </div>
 
               <div>
-                <label htmlFor="hair">Hair
-                <input onChange={(event) => this.setFeature(event, 'hair', 'hair-styles')} 
-                       onTouchStart={(event) => this.animateFeature({raise: 'hairs'})} 
-                       onTouchEnd={() => this.resetFeature({lower: 'hairs'})}
-                       name="hair" type="range" min="0" max="600" step="100" value={hair}/>
+                <label htmlFor="face">
+                  Face
+                  <input
+                    onChange={(event) => setFace(event.target.value)}
+                    name="face"
+                    type="range"
+                    min="0"
+                    max="400"
+                    step="100"
+                    value={face}
+                  />
                 </label>
               </div>
-          
+
               <div>
-                <label htmlFor="face">Face
-                <input onChange={(event) => this.setFeature(event, 'face', 'faces')}
-                       name="face" type="range" min="0" max="400" step="100" value={face}/>
+                <label htmlFor="body">
+                  Body
+                  <input
+                    onChange={(event) => setBody(event.target.value)}
+                    name="body"
+                    type="range"
+                    min="100"
+                    max="400"
+                    step="100"
+                    value={body}
+                  />
                 </label>
               </div>
-          
+
               <div>
-                <label htmlFor="body">Body
-                <input onChange={(event) => this.setFeature(event, 'body', 'bodies')}
-                       onTouchStart={(event) => this.animateFeature({lower: 'lower', raise: 'head'})} 
-                       onTouchEnd={() => this.resetFeature({lower: 'head', raise: 'lower'})}
-                       name="body" type="range" min="100" max="400" step="100" value={body}/>
+                <label htmlFor="legs">
+                  Legs
+                  <input
+                    onChange={(event) => setLeg(event.target.value)}
+                    name="legs"
+                    type="range"
+                    min="100"
+                    max="400"
+                    step="100"
+                    value={leg}
+                  />
                 </label>
               </div>
-       
-              <div>
-                <label htmlFor="legs">Legs
-                <input onChange={(event) => this.setFeature(event, 'leg', 'legs')} 
-                       onTouchStart={() => this.animateFeature({lower: 'lower'})}
-                       onTouchEnd={() => this.resetFeature({raise: 'lower'})}
-                       name="legs" type="range" min="100" max="400" step="100" value={leg}/>
-                </label>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="outlined"
+                  disabled={loading}
+                  onClick={fetchRandomCharacter}
+                  sx={{
+                    textTransform: "none", // Prevents all caps by default in MUI buttons
+                  }}
+                >
+                  {loading ? "...Loading" : "New Character"}
+                </Button>
               </div>
-              <div style={{display: 'flex', justifyContent: 'center'}}>
-                <button className="btn " type="button" disabled={character.name === "...Loading"} onClick={this.handleRandCharClick}>
-                  {character.name === "...Loading" ? "...Loading" : "New Character"}
-                </button>
-              </div>
-              
             </fieldset>
           </div>
 
@@ -360,10 +302,9 @@ export default class Lego extends Component {
             </div>
           </div>
         </div>
-   
       </div>
+    </Suspense>
+  );
+};
 
-      </Suspense>
-    )
-  }
-}
+export default Lego;

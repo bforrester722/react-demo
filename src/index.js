@@ -60,8 +60,13 @@ root.render(
 
 // Register the service worker using Workbox
 if ("serviceWorker" in navigator) {
-  // window.addEventListener("load", () => {
-  //   const wb = new Workbox("/sw.js");
-  //   wb.register();
-  // });
+  window.addEventListener("load", () => {
+    const wb = new Workbox("/sw.js");
+    wb.addEventListener("waiting", () => {
+      console.log("A new service worker is waiting to activate.");
+    });
+    wb.register().then((registration) => {
+      console.log("Service Worker registered with scope:", registration.scope);
+    });
+  });
 }

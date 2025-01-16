@@ -82,7 +82,7 @@ module.exports = {
       patterns: [{ from: "public", to: "./" }],
     }),
     new InjectManifest({
-      swSrc: "./src/sw.js",
+      // swSrc: "./src/sw.js",
       swDest: "sw.js",
     }),
     new HtmlWebpackPlugin({

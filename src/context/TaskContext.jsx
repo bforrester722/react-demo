@@ -33,6 +33,7 @@ const TaskProvider = ({ children }) => {
 
     if (timeToNotify > now) {
       setTimeout(() => {
+          alert("asdf " + task.title);
         new Notification("Task Reminder", {
           body: `Reminder: "${task.title}" is due in 30 minutes!`,
           icon: "/icon.png", // Add your custom icon

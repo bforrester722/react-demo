@@ -16,12 +16,12 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 // Cache specific routes
 registerRoute(
-  ({ request }) => request.destination === "image",
+  ({ request }) => request.destination === "document", // Match HTML documents
   new CacheFirst({
-    cacheName: "images",
+    cacheName: "pages",
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 50, // Maximum number of entries
+        maxEntries: 50, // Cache up to 50 entries
         maxAgeSeconds: 30 * 24 * 60 * 60, // Cache for 30 days
       }),
     ],

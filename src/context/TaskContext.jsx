@@ -30,6 +30,7 @@ const TaskProvider = ({ children }) => {
   const showNotification = (task) => {
     const timeToNotify = new Date(task.dueDate).getTime() - 30 * 60 * 1000; // 30 minutes before
     const now = Date.now();
+
     if (timeToNotify > now) {
       setTimeout(() => {
         new Notification("Task Reminder", {
@@ -56,7 +57,7 @@ const TaskProvider = ({ children }) => {
         }));
 
         setTasks(tasksData);
-
+        console.log("task", tasksData);
         // Schedule notifications for new or updated tasks
         tasksData.forEach((task) => {
           if (task.dueDate) showNotification(task);

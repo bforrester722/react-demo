@@ -1,49 +1,78 @@
 import React, { createContext, useState, useEffect } from "react";
-import { getFirestore } from "firebase/firestore";
-// import { db } from "../firebase/firebase"; // Ensure this is the correct path to your firebase.js file
 import {
+  getFirestore,
   collection,
-  getDocs,
+  onSnapshot,
   addDoc,
   updateDoc,
   deleteDoc,
-  doc, // Import `doc` for document reference
+  doc,
 } from "firebase/firestore";
-import { set } from "firebase/database";
-import { getApps } from "firebase/app";
+
 export const TaskContext = createContext();
 
 const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
+  const [currentTask, setCurrentTask] = useState(null); // Add currentTask state
 
-  // Fetch tasks from Firestore
+  // Request Notification Permissions
+  const requestNotificationPermission = async () => {
+    if (!("Notification" in window)) {
+      console.log("This browser does not support notifications.");
+      return;
+    }
+    if (Notification.permission !== "granted") {
+      await Notification.requestPermission();
+    }
+  };
+
+  // Show Notifications
+  const showNotification = (task) => {
+    const timeToNotify = new Date(task.dueDate).getTime() - 30 * 60 * 1000; // 30 minutes before
+    const now = Date.now();
+    if (timeToNotify > now) {
+      setTimeout(() => {
+        new Notification("Task Reminder", {
+          body: `Reminder: "${task.title}" is due in 30 minutes!`,
+          icon: "/icon.png", // Add your custom icon
+        });
+      }, timeToNotify - now);
+    }
+  };
+
+  // Real-time synchronization of tasks
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const db = getFirestore();
-        const tasksCollection = collection(db, "tasks");
+    const fetchData = async () => {
+      requestNotificationPermission(); // Request notification permissions on load
 
-        const snapshot = await getDocs(tasksCollection);
+      const db = getFirestore();
+      const tasksCollection = collection(db, "tasks");
+
+      // Listen to real-time updates from Firestore
+      const unsubscribe = onSnapshot(tasksCollection, (snapshot) => {
         const tasksData = snapshot.docs.map((doc) => ({
-          id: doc.id, // Include the document ID in the task object
+          id: doc.id,
           ...doc.data(),
-          status: "pending",
         }));
+
         setTasks(tasksData);
-        // setTasks(snapshot.docs.map((doc) => doc.data()));
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
+
+        // Schedule notifications for new or updated tasks
+        tasksData.forEach((task) => {
+          if (task.dueDate) showNotification(task);
+        });
+      });
+
+      return () => unsubscribe(); // Clean up listener on unmount
     };
-    setTimeout(() => {
-      fetchTasks();
-    }, 500);
+
+    fetchData();
   }, []);
 
   const addTask = async (newTask) => {
     try {
       const db = getFirestore();
-      const docRef = await addDoc(collection(db, "tasks"), newTask); // Correct usage
+      const docRef = await addDoc(collection(db, "tasks"), newTask);
       setTasks((prev) => [...prev, { id: docRef.id, ...newTask }]);
     } catch (error) {
       console.error("Error adding task:", error);
@@ -53,65 +82,34 @@ const TaskProvider = ({ children }) => {
   const updateTask = async (id, updatedTask) => {
     try {
       const db = getFirestore();
-      // Find the task in the current state
-      const foundTask = tasks.find((task) => task.id === id);
-
-      if (!foundTask) {
-        console.error(`Task with ID ${id} not found.`);
-        return;
-      }
-
-      // Merge existing task data with updatedTask
-      const mergedTask = { ...foundTask, ...updatedTask };
-
-      // Reference the Firestore document
       const docRef = doc(db, "tasks", id);
-
-      // Update Firestore with the merged data
-      await updateDoc(docRef, mergedTask);
-
-      // Update the local state
-      setTasks((prev) =>
-        prev.map((task) => (task.id === id ? { ...task, ...mergedTask } : task))
-      );
-
-      console.log(`Task with ID ${id} updated successfully.`);
+      await updateDoc(docRef, updatedTask);
     } catch (error) {
       console.error("Error updating task:", error);
     }
   };
 
-  //   const deleteTask = async (id) => {
-  //     try {
-  //       const db = getFirestore();
-  //       const docRef = doc(db, "tasks", id); // Use `doc` to reference the document
-  //       await deleteDoc(docRef);
-  //       setTasks((prev) => prev.filter((task) => task.id !== id));
-  //     } catch (error) {
-  //       console.error("Error deleting task:", error);
-  //     }
-  //   };
-
   const deleteTask = async (id) => {
     try {
       const db = getFirestore();
-      const docRef = doc(db, "tasks", id); // Reference the document by ID
-      await deleteDoc(docRef); // Delete the document in Firestore
-
-      setTasks((prev) => {
-        if (!Array.isArray(prev)) {
-          console.error("Tasks state is not an array:", prev);
-          return []; // Fallback to an empty array if tasks state is invalid
-        }
-        return prev.filter((task) => task.id !== id); // Filter out the deleted task
-      });
+      const docRef = doc(db, "tasks", id);
+      await deleteDoc(docRef);
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        currentTask,
+        setCurrentTask, // Provide the setCurrentTask function
+        addTask,
+        updateTask,
+        deleteTask,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );

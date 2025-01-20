@@ -1,5 +1,5 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 admin.initializeApp();
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -10,8 +10,8 @@ admin.initializeApp();
 // });
 
 exports.sendNotification = functions.https.onCall((data, context) => {
-	const {message, token} = data.data;
+  const { message, token } = data.data;
 
-	console.log('token', message)
-	admin.messaging().sendToDevice(token, message)
+  console.log("token", message);
+  admin.messaging().sendToDevice(token, message);
 });

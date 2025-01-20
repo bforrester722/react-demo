@@ -5,6 +5,7 @@ import App from "./App";
 import "./styles.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import TaskProvider from "./context/TaskContext";
+import UserProvider from "./context/UserContext";
 import { Workbox } from "workbox-window";
 
 // Create a root for React 18
@@ -13,10 +14,10 @@ const theme = createTheme({
   palette: {
     mode: "dark", // Enable dark mode
     primary: {
-      main: "#90caf9", // Customize your primary color
+      main: "#e442fc", // Customize your primary color
     },
     secondary: {
-      main: "#f48fb1", // Customize your secondary color
+      main: "#61dafb", // Customize your secondary color
     },
     text: {
       primary: "#ffffff", // Default text color for dark mode
@@ -50,11 +51,12 @@ const theme = createTheme({
 root.render(
   <BrowserRouter>
     <ThemeProvider theme={theme}>
-      <TaskProvider>
-        <App />
-      </TaskProvider>
+      <UserProvider>
+        <TaskProvider>
+          <App />
+        </TaskProvider>
+      </UserProvider>
     </ThemeProvider>
-    ,
   </BrowserRouter>
 );
 

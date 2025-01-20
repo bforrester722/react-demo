@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require("webpack");
 const dotenv = require("dotenv");
 
@@ -42,12 +43,11 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env": JSON.stringify(process.env),
     }),
-    new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      inject: "body",
-    }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "public", to: "./" }],
     }),
     new InjectManifest({
       swSrc: "./src/sw.js", // Your source service worker

@@ -1,6 +1,7 @@
 import { precacheAndRoute } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { CacheFirst } from "workbox-strategies";
+import { NetworkFirst } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 /* eslint-disable no-restricted-globals */
 // Skip waiting and claim clients immediately
@@ -17,7 +18,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 // Cache specific routes
 registerRoute(
   ({ request }) => request.destination === "document", // Match HTML documents
-  new CacheFirst({
+  new NetworkFirst({
     cacheName: "pages",
     plugins: [
       new ExpirationPlugin({

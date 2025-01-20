@@ -33,11 +33,20 @@ const TaskProvider = ({ children }) => {
 
     if (timeToNotify > now) {
       setTimeout(() => {
-          alert("asdf " + task.title);
-        new Notification("Task Reminder", {
-          body: `Reminder: "${task.title}" is due in 30 minutes!`,
-          icon: "/icon.png", // Add your custom icon
+
+//           alert("asdf " + task.title);
+ 
+
+        navigator.serviceWorker.ready.then(function (registration) {
+          registration.showNotification(
+            `Reminder: "${task.title}" is due in 30 minutes!`
+          );
+
         });
+        // new Notification("Task Reminder", {
+        //   body: `Reminder: "${task.title}" is due in 30 minutes!`,
+        //   icon: "/icon.png", // Add your custom icon
+        // });
       }, timeToNotify - now);
     }
   };

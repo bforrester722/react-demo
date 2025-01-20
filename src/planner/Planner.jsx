@@ -34,6 +34,16 @@ const Planner = () => {
   return (
     <div className="home-page">
       <Box sx={{ maxWidth: "1400px", margin: "auto", position: "relative" }}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "8px",
+            right: "16px",
+            color: "darkgray",
+          }}
+        >
+          v1.0
+        </Box>
         {isEditing && (
           <TaskEditor onClose={() => cleanUp()} currentTask={currentTask} />
         )}

@@ -45,7 +45,7 @@
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
     "start2": "react-scripts start",
-    "build": "webpack --config=webpack.config.js --mode production && serve -s dist",
+    "build": "webpack --config=webpack.config.js --mode production",
     "buildTest": "rimraf dist && webpack --config=webpack.config.js --mode production && serve -s dist",
     "test": "react-scripts test",
     "report": "npm run build --withReport true",

@@ -23,6 +23,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 }));
 
 const StyledToolbar = styled(Toolbar)({
+  backgroundColor: "black",
   justifyContent: "flex-end",
   minHeight: "64px",
 });

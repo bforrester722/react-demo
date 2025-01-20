@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signin, signInWithGoogle, signInWithFacebook } from "../helpers/login";
 import "./chat.css";
 
@@ -7,6 +7,10 @@ const Login = ({ onHeaderTitle }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/chat"; // Default to /chat if no intended route
 
   // Set page title when component mounts
   useEffect(() => {
@@ -28,11 +32,10 @@ const Login = ({ onHeaderTitle }) => {
   // Handle email/password sign-in
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("e", e);
     setError(null);
     try {
       await signin(email, password);
-      console.log("email", email, password);
+      navigate(from, { replace: true }); // Navigate to the intended route
     } catch (err) {
       setError(err.message);
     }

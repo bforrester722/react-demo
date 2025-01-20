@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+
 import { Helmet } from "react-helmet";
 
 // Lazy components
@@ -29,11 +30,12 @@ const AppShell = ({ pages }) => {
   const location = useLocation();
 
   // Listen to Firebase auth state changes
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("user", user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthenticated(!!user);
     });
+
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
@@ -53,10 +55,12 @@ const AppShell = ({ pages }) => {
 
   // Private route wrapper
   const PrivateRoute = ({ component: Component, ...rest }) => {
+    const location = useLocation();
+
     return authenticated ? (
       <Component {...rest} />
     ) : (
-      <Navigate to="/login" replace />
+      <Navigate to="/login" replace state={{ from: location }} />
     );
   };
 
@@ -66,12 +70,15 @@ const AppShell = ({ pages }) => {
     restrictedToPublic,
     ...rest
   }) => {
+    const location = useLocation();
+
     if (authenticated && restrictedToPublic) {
-      return <Navigate to="/chat" replace />;
+      const redirectTo = location.state?.from?.pathname || "/chat"; // Redirect to previous or default to `/chat`
+      return <Navigate to={redirectTo} replace />;
     }
+
     return <Component {...rest} onHeaderTitle={handlePageChange} />;
   };
-
   return (
     <div>
       <Helmet>
@@ -91,7 +98,7 @@ const AppShell = ({ pages }) => {
           <Route path="/home" element={<PublicRoute component={Home} />} />
           <Route
             path="/planner"
-            element={<PublicRoute component={Planner} />}
+            element={<PrivateRoute component={Planner} />}
           />
           <Route path="/chat" element={<PrivateRoute component={Chat} />} />
           <Route
@@ -103,7 +110,7 @@ const AppShell = ({ pages }) => {
             element={<PublicRoute component={Login} restrictedToPublic />}
           />
           <Route path="/lego" element={<PublicRoute component={Lego} />} />
-          <Route path="*" element={<Navigate to="/planner" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
         <CssBaseline />
       </main>

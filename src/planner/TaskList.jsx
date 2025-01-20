@@ -1,33 +1,47 @@
 import React, { useState, useEffect, useContext } from "react";
 import { TaskContext } from "../context/TaskContext";
 import {
-  List,
-  ListItem,
-  ListItemText,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  FormControl,
   Select,
   MenuItem,
-  FormControl,
   InputLabel,
   Box,
   Button,
-  Modal,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import moment from "moment";
-import TaskEditModal from "./TaskEditModal";
 
 const TaskList = () => {
-  const { tasks, updateTask } = useContext(TaskContext);
+  const { tasks, setCurrentTask } = useContext(TaskContext);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [personFilter, setPersonFilter] = useState("all");
   const [timeFilter, setTimeFilter] = useState("day");
-  const [editingTask, setEditingTask] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [showNoDueDate, setShowNoDueDate] = useState(false);
 
   useEffect(() => {
     const now = moment();
+    // Show tasks with no due dates if toggle is active
+    if (showNoDueDate) {
+      const filtered = tasks.filter((task) => !task.dueDate);
+      // Sort by importance (high to low)
+      filtered.sort((a, b) => {
+        const importanceOrder = { High: 3, Medium: 2, Low: 1 };
+        return (
+          (importanceOrder[b.importance] || 0) -
+          (importanceOrder[a.importance] || 0)
+        );
+      });
+      setFilteredTasks(filtered);
+      return;
+    }
 
-    // Filter tasks based on the selected time range
-    const filteredByTime = tasks.filter((task) => {
+    // Filter tasks based on time range
+    let filteredByTime = tasks.filter((task) => {
       const startDate = moment(task.startDate || task.dueDate);
       const dueDate = moment(task.dueDate);
 
@@ -46,49 +60,29 @@ const TaskList = () => {
           startDate.isSameOrBefore(now, "month") &&
           dueDate.isSameOrAfter(now, "month")
         );
-      } else if (timeFilter === "") {
-        return task;
+      } else {
+        return true;
       }
-
-      return false;
     });
 
-    // Apply personFilter on top of timeFilter
-    if (personFilter === "all") {
-      setFilteredTasks(filteredByTime);
-    } else {
-      setFilteredTasks(
-        filteredByTime.filter((task) => task.assignedTo === personFilter)
+    // Apply person filter
+    if (personFilter !== "all") {
+      filteredByTime = filteredByTime.filter(
+        (task) => task.assignedTo === personFilter
       );
     }
-  }, [tasks, personFilter, timeFilter]);
+
+    setFilteredTasks(filteredByTime);
+  }, [tasks, personFilter, timeFilter, showNoDueDate]);
 
   const handleEditClick = (task) => {
-    setEditingTask(task);
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setEditingTask(null);
-  };
-
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditingTask((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = () => {
-    if (editingTask) {
-      updateTask(editingTask.id, editingTask);
-      handleModalClose();
-    }
+    setCurrentTask(task);
   };
 
   return (
     <Box sx={{ p: 2 }}>
-      {/* Filter By Person */}
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      {/* Filters */}
+      <FormControl sx={{ mt: 2, mr: 2, minWidth: "140px" }}>
         <InputLabel>Filter By Person</InputLabel>
         <Select
           value={personFilter}
@@ -102,8 +96,7 @@ const TaskList = () => {
         </Select>
       </FormControl>
 
-      {/* Filter By Time */}
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl sx={{ mt: 2, mr: 2, minWidth: "140px" }}>
         <InputLabel>Filter By Time</InputLabel>
         <Select
           value={timeFilter}
@@ -116,68 +109,57 @@ const TaskList = () => {
         </Select>
       </FormControl>
 
-      {/* Task List */}
-      <List>
-        {filteredTasks.map((task) => (
-          <ListItem
-            key={task.id}
-            sx={{
-              borderBottom: "1px solid #ddd",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <ListItemText
-              primary={task.title}
-              secondary={
-                <>
-                  {task.assignedTo && (
-                    <p>
-                      <strong>Assigned to:</strong> {task.assignedTo}
-                    </p>
-                  )}
-                  {task.importance && (
-                    <p>
-                      <strong>Importance:</strong> {task.importance}
-                    </p>
-                  )}
-                  {task.startDate && (
-                    <p>
-                      <strong>Start Date:</strong>{" "}
-                      {moment(task.startDate).format("YYYY-MM-DD HH:mm")}
-                    </p>
-                  )}
-                  {task.dueDate && (
-                    <p>
-                      <strong>Due Date:</strong>{" "}
-                      {moment(task.dueDate).format("YYYY-MM-DD HH:mm")}
-                    </p>
-                  )}
-                  {task.description && (
-                    <p>
-                      <strong>Description:</strong> {task.description}
-                    </p>
-                  )}
-                </>
-              }
-            />
-            <Button variant="outlined" onClick={() => handleEditClick(task)}>
-              Edit
-            </Button>
-          </ListItem>
-        ))}
-      </List>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showNoDueDate}
+            onChange={(e) => setShowNoDueDate(e.target.checked)}
+          />
+        }
+        sx={{ mt: 2, mr: 2 }}
+        label="Show Tasks Without Due Dates"
+      />
 
-      {/* Edit Modal */}
-      <Modal open={modalOpen} onClose={handleModalClose}>
-        <TaskEditModal
-          open={modalOpen}
-          onClose={handleModalClose}
-          task={editingTask}
-          onChange={handleEditChange}
-          onSave={handleSave}
-        />
-      </Modal>
+      {/* Task List as Grid */}
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {filteredTasks.map((task) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={task.id}>
+            <Card
+              sx={{
+                border: "1px solid #e442fc",
+                boxShadow: "4px 4px 8px #61dafb",
+                minHeight: "150px",
+                "&:hover": { cursor: "pointer" },
+              }}
+              onClick={() => handleEditClick(task)}
+            >
+              <CardContent>
+                <Typography variant="body1" gutterBottom>
+                  {task.title}
+                </Typography>
+                {task.assignedTo && (
+                  <Typography variant="body2">{task.assignedTo}</Typography>
+                )}
+                {task.description && (
+                  <Typography variant="body2">{task.description}</Typography>
+                )}
+                {task.startDate && (
+                  <Typography variant="body2">
+                    <strong>Start Date:</strong>{" "}
+                    {moment(task.startDate).format("MM-DD-YYYY h:mm A")}
+                  </Typography>
+                )}
+                {task.dueDate && (
+                  <Typography variant="body2">
+                    <strong>Due Date:</strong>{" "}
+                    {moment(task.dueDate).format("MM-DD-YYYY h:mm A")}
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };

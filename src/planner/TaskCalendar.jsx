@@ -3,15 +3,18 @@ import { TaskContext } from "../context/TaskContext";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Modal, Box, Button, Typography } from "@mui/material";
+import { Modal, Box, Button, Typography, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import "./planner.css";
 
 const localizer = momentLocalizer(moment);
 
 const TaskCalendar = () => {
-  const { tasks, updateTask, deleteTask } = useContext(TaskContext); // Add update and delete context functions
+  const { tasks, setCurrentTask } = useContext(TaskContext);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null); // Track selected event for modal
   const [openModal, setOpenModal] = useState(false);
+
   const generateRecurringEvents = (task) => {
     if (task.recurrence === "none") {
       return [
@@ -73,18 +76,22 @@ const TaskCalendar = () => {
     console.log("Generated Events:", filtered);
   }, [tasks]);
 
-  useEffect(() => {
-    console.log("events", events);
-  }, [events]);
-
-  // Handle event click
   const handleSelectEvent = (event) => {
-    console.log(event);
-    setSelectedEvent(event); // Store the selected event
-    setOpenModal(true); // Open the modal
+    setSelectedEvent(event);
+    // setCurrentTask(event);
+    setOpenModal(true);
   };
 
-  // Change background color based on `assignedTo`
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedEvent(null);
+  };
+
+  const handleEdit = () => {
+    setCurrentTask(selectedEvent);
+    setOpenModal(false);
+  };
+
   const eventPropGetter = (event) => {
     const style = {
       border: "none",
@@ -100,7 +107,7 @@ const TaskCalendar = () => {
     } else {
       style.backgroundColor = "#F6019D"; // Default for "Self" or unknown
     }
-    // console.log("event", event);
+
     if (event.status === "completed") {
       style.textDecoration = "line-through";
     }
@@ -108,42 +115,27 @@ const TaskCalendar = () => {
     return { style };
   };
 
-  // Close modal
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedEvent(null);
-  };
+  const getDayProps = (date) => {
+    const isToday = moment().isSame(date, "day");
 
-  // Cross off event (mark as completed)
-  const handleCrossOff = () => {
-    if (selectedEvent) {
-      updateTask(selectedEvent.id, { status: "completed" });
-      handleCloseModal();
-    }
-  };
-
-  // Delete event
-  const handleDelete = () => {
-    if (selectedEvent) {
-      console.log(selectedEvent);
-      deleteTask(selectedEvent.id);
-      handleCloseModal();
-    }
+    return {
+      className: isToday ? "today" : "",
+    };
   };
 
   return (
-    <div style={{ height: "700px" }}>
+    <div style={{ height: "600px" }}>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         eventPropGetter={eventPropGetter}
+        dayPropGetter={getDayProps}
         style={{ height: "100%", padding: "10px" }}
         onSelectEvent={handleSelectEvent}
       />
 
-      {/* Event Modal */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -158,41 +150,27 @@ const TaskCalendar = () => {
             p: 4,
           }}
         >
+          <IconButton
+            sx={{ position: "absolute", top: "16px", right: "16px" }}
+            onClick={handleCloseModal}
+          >
+            <CloseIcon />
+          </IconButton>
           {selectedEvent && (
             <>
-              <Typography variant="h6">{selectedEvent.title}</Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                Assigned To: {selectedEvent.assignedTo}
+              <Typography variant="body1">{selectedEvent.title}</Typography>
+              <Typography variant="body2">
+                {selectedEvent.assignedTo}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Description: {selectedEvent.description}
+              <Typography variant="body2">
+                {selectedEvent.description}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Time: {moment(selectedEvent.dueDate).format("hh:mm A")}
+              <Typography variant="body2">
+                {moment(selectedEvent.dueDate).format("hh:mm A")}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Status: {selectedEvent.status}
-              </Typography>
-
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
-              >
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={handleCrossOff}
-                >
-                  Cross Off
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleDelete}
-                >
-                  Remove
-                </Button>
-                <Button variant="outlined" onClick={handleCloseModal}>
-                  Cancel
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="outlined" onClick={handleEdit}>
+                  Edit
                 </Button>
               </Box>
             </>

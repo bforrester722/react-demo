@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const webpack = require("webpack");
 const dotenv = require("dotenv");
 
@@ -54,7 +55,17 @@ module.exports = {
       swDest: "sw.js", // Output service worker
       maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // 4MB file size limit
     }),
-
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "public", // Source directory
+          to: "./", // Destination directory
+          globOptions: {
+            ignore: ["**/index.html"], // Ignore index.html
+          },
+        },
+      ],
+    }),
     new CleanWebpackPlugin(),
   ],
   optimization: {

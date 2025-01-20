@@ -2,6 +2,14 @@ import { precacheAndRoute } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { CacheFirst } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
+/* eslint-disable no-restricted-globals */
+// Skip waiting and claim clients immediately
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+});
+self.addEventListener("activate", (event) => {
+  self.clients.claim();
+});
 
 // Precache assets
 precacheAndRoute(self.__WB_MANIFEST);

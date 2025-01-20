@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { styled } from "@mui/system";
 import AppBar from "@mui/material/AppBar";
 import Drawer from "@mui/material/Drawer";
@@ -10,6 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { useTheme } from "@mui/material/styles";
+import { UserContext } from "../context/UserContext";
 import "./components.css";
 import { wait } from "../helpers/utils";
 
@@ -40,6 +41,9 @@ const DrawerLabel = styled(ListItemText)(({ open }) => ({
   opacity: open ? "1" : "0",
   transition: "opacity .1s .1s, transform 1s cubic-bezier(0.49, 0.01, 0, 1)",
   transform: open ? "translateY(0px)" : "translateY(-200px)",
+  "&:hover": {
+    cursor: "pointer", // Slight zoom effect on hover
+  },
 }));
 
 const Ripples = styled("div")(({ open }) => ({
@@ -57,9 +61,30 @@ const Ripples = styled("div")(({ open }) => ({
   ...(open && { transform: "scale(1, 20)" }),
 }));
 
-const AppToolbar = ({ pages, onDrawerLinkClicked }) => {
+const AppToolbar = ({ onDrawerLinkClicked }) => {
+  const { user } = useContext(UserContext);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+
+  const pages = [
+    {
+      label: "Home",
+    },
+    {
+      label: "Lego",
+    },
+    {
+      label: "Chat",
+    },
+    {
+      label: "Planner",
+      hide: !user?.planner,
+    },
+    {
+      label: "Settings",
+      hide: !user?.planner,
+    },
+  ];
 
   const handleDrawer = () => {
     setOpen((prev) => !prev);
@@ -168,14 +193,16 @@ const AppToolbar = ({ pages, onDrawerLinkClicked }) => {
           </IconButton>
         </div>
         <DrawerList>
-          {pages.map((page) => (
-            <ListItem
-              key={page.label}
-              onClick={() => handleDrawerLinkClicked(page.label)}
-            >
-              <DrawerLabel open={open} primary={page.label} />
-            </ListItem>
-          ))}
+          {pages
+            .filter((page) => !page.hide) // Filter out hidden pages
+            .map((page) => (
+              <ListItem
+                key={page.label}
+                onClick={() => handleDrawerLinkClicked(page.label)}
+              >
+                <DrawerLabel open={open} primary={page.label} />
+              </ListItem>
+            ))}
         </DrawerList>
       </Drawer>
       <Ripples open={open} />

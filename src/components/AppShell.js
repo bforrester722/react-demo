@@ -22,8 +22,9 @@ const Planner = lazy(() => import("../planner/Planner"));
 const Login = lazy(() => import("../chat/Login"));
 const Signup = lazy(() => import("../chat/Signup"));
 const Lego = lazy(() => import("../lego/Lego"));
+const Settings = lazy(() => import("../settings/Settings"));
 
-const AppShell = ({ pages }) => {
+const AppShell = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [headerTitle, setHeaderTitle] = useState("Home");
   const navigate = useNavigate();
@@ -91,7 +92,10 @@ const AppShell = ({ pages }) => {
         <meta name="description" content="Ben Forrester's React demo page" />
       </Helmet>
 
-      <AppToolbar pages={pages} onDrawerLinkClicked={handleDrawerLinkClicked} />
+      <AppToolbar
+        authenticated={authenticated}
+        onDrawerLinkClicked={handleDrawerLinkClicked}
+      />
 
       <main>
         <Routes>
@@ -99,6 +103,10 @@ const AppShell = ({ pages }) => {
           <Route
             path="/planner"
             element={<PrivateRoute component={Planner} />}
+          />
+          <Route
+            path="/settings"
+            element={<PrivateRoute component={Settings} />}
           />
           <Route path="/chat" element={<PrivateRoute component={Chat} />} />
           <Route

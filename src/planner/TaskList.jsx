@@ -25,54 +25,71 @@ const TaskList = () => {
 
   useEffect(() => {
     const now = moment();
-    // Show tasks with no due dates if toggle is active
-    if (showNoDueDate) {
-      const filtered = tasks.filter((task) => !task.dueDate);
-      // Sort by importance (high to low)
-      filtered.sort((a, b) => {
-        const importanceOrder = { High: 3, Medium: 2, Low: 1 };
-        return (
-          (importanceOrder[b.importance] || 0) -
-          (importanceOrder[a.importance] || 0)
-        );
+
+    // Function to filter tasks by no due date and importance
+    const filterByNoDueDateAndImportance = (tasks) => {
+      if (showNoDueDate) {
+        const filtered = tasks.filter((task) => !task.dueDate);
+        filtered.sort((a, b) => {
+          const importanceOrder = { High: 3, Medium: 2, Low: 1 };
+          return (
+            (importanceOrder[b.importance] || 0) -
+            (importanceOrder[a.importance] || 0)
+          );
+        });
+
+        return personFilter !== "all"
+          ? filtered.filter((task) => task.assignedTo === personFilter)
+          : filtered;
+      }
+      return tasks;
+    };
+
+    // Function to filter tasks by time range (applied only if showNoDueDate is not active)
+    const filterByTimeRange = (tasks) => {
+      return tasks.filter((task) => {
+        const startDate = moment(task.startDate || task.dueDate);
+        const dueDate = moment(task.dueDate);
+
+        switch (timeFilter) {
+          case "day":
+            return (
+              startDate.isSameOrBefore(now, "day") &&
+              dueDate.isSameOrAfter(now, "day")
+            );
+          case "week":
+            return (
+              startDate.isSameOrBefore(now, "week") &&
+              dueDate.isSameOrAfter(now, "week")
+            );
+          case "month":
+            return (
+              startDate.isSameOrBefore(now, "month") &&
+              dueDate.isSameOrAfter(now, "month")
+            );
+          default:
+            return true;
+        }
       });
-      setFilteredTasks(filtered);
-      return;
+    };
+
+    // Apply filters sequentially
+    let filteredTasks = filterByNoDueDateAndImportance(tasks);
+
+    // Only apply time range filter if showNoDueDate is not active
+    if (!showNoDueDate) {
+      filteredTasks = filterByTimeRange(filteredTasks);
     }
 
-    // Filter tasks based on time range
-    let filteredByTime = tasks.filter((task) => {
-      const startDate = moment(task.startDate || task.dueDate);
-      const dueDate = moment(task.dueDate);
-
-      if (timeFilter === "day") {
-        return (
-          startDate.isSameOrBefore(now, "day") &&
-          dueDate.isSameOrAfter(now, "day")
-        );
-      } else if (timeFilter === "week") {
-        return (
-          startDate.isSameOrBefore(now, "week") &&
-          dueDate.isSameOrAfter(now, "week")
-        );
-      } else if (timeFilter === "month") {
-        return (
-          startDate.isSameOrBefore(now, "month") &&
-          dueDate.isSameOrAfter(now, "month")
-        );
-      } else {
-        return true;
-      }
-    });
-
-    // Apply person filter
+    // Apply person filter if not "all"
     if (personFilter !== "all") {
-      filteredByTime = filteredByTime.filter(
+      filteredTasks = filteredTasks.filter(
         (task) => task.assignedTo === personFilter
       );
     }
 
-    setFilteredTasks(filteredByTime);
+    // Update state with filtered tasks
+    setFilteredTasks(filteredTasks);
   }, [tasks, personFilter, timeFilter, showNoDueDate]);
 
   const handleEditClick = (task) => {

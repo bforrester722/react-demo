@@ -73,7 +73,9 @@ const TaskEditor = ({ onClose }) => {
     setCurrentTask(null);
     onClose();
   };
+
   const handleSubmit = () => {
+    console.log("ran");
     if (currentTask) {
       updateTask(currentTask.id, task);
     } else {

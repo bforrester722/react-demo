@@ -33,15 +33,12 @@ const TaskProvider = ({ children }) => {
 
     if (timeToNotify > now) {
       setTimeout(() => {
-
-//           alert("asdf " + task.title);
- 
+        //           alert("asdf " + task.title);
 
         navigator.serviceWorker.ready.then(function (registration) {
           registration.showNotification(
             `Reminder: "${task.title}" is due in 30 minutes!`
           );
-
         });
         // new Notification("Task Reminder", {
         //   body: `Reminder: "${task.title}" is due in 30 minutes!`,
@@ -83,8 +80,7 @@ const TaskProvider = ({ children }) => {
   const addTask = async (newTask) => {
     try {
       const db = getFirestore();
-      const docRef = await addDoc(collection(db, "tasks"), newTask);
-      setTasks((prev) => [...prev, { id: docRef.id, ...newTask }]);
+      await addDoc(collection(db, "tasks"), newTask);
     } catch (error) {
       console.error("Error adding task:", error);
     }
